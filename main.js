@@ -3,8 +3,6 @@ import * as THREE from 'https://unpkg.com/three/build/three.module.js';
 // create 'main' element
 let main = document.createElement('main');
 document.body.appendChild(main);
-scaleApp();
-window.onresize = scaleApp;
 
 // create scene
 let scene = new THREE.Scene();
@@ -15,10 +13,15 @@ let camera = new THREE.PerspectiveCamera();
 // create renderer
 let renderer = new THREE.WebGLRenderer({ antialias: true });
 renderer.setSize(512, 512);
+renderer.setClearColor(0x444444);
 renderer.domElement.style.width = '100%';
 renderer.domElement.style.height = 'auto';
 renderer.outputEncoding = THREE.sRGBEncoding;
 main.appendChild(renderer.domElement);
+
+// scale app (and decorate renderer)
+window.onresize = scaleApp;
+scaleApp();
 
 // animate
 animate();
@@ -53,10 +56,14 @@ function scaleApp() {
         // maximize height, compute width accordingly
         main.style.height = (window.innerHeight - verticalMargin).toString() + 'px'
         main.style.width = ((window.innerHeight - verticalMargin) * appAspectRatio).toString() + 'px';
+        renderer.domElement.style.borderWidth = '2px';
+        renderer.domElement.style.borderRadius = '20px';
     } else {
         // maximize width, compute height accordingly
         main.style.width = (window.innerWidth).toString() + 'px';
         main.style.height = (window.innerWidth * 1 / appAspectRatio).toString() + 'px';
+        renderer.domElement.style.borderWidth = '2px 0 2px 0';
+        renderer.domElement.style.borderRadius = '0';
     }
 }
 
@@ -73,7 +80,9 @@ function configControls() {
     let displacement = document.createElement('h1');
     displacement.style.margin = '0';
     displacement.innerHTML = '&nbsp;';
-    main.appendChild(displacement);
+    displacement.style.position = 'absolute';
+    displacement.style.top = '0%';
+    document.body.appendChild(displacement);
 
     let dragId = 0;
     let dragStart;
