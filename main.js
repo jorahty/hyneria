@@ -1,58 +1,46 @@
+import * as THREE from 'https://unpkg.com/three/build/three.module.js';
+
 // create 'main' element
 let main = document.createElement('main');
 document.body.appendChild(main);
 scaleApp();
 window.onresize = scaleApp;
 
+// create scene
+let scene = new THREE.Scene();
+
+// create camera
+let camera = new THREE.PerspectiveCamera();
+
 // create renderer
-let renderer = document.createElement('canvas');
-renderer.width = 100;
-renderer.height = 100;
-main.appendChild(renderer);
+let renderer = new THREE.WebGLRenderer({ antialias: true });
+renderer.setSize(512, 512);
+renderer.domElement.style.width = '100%';
+renderer.domElement.style.height = 'auto';
+renderer.outputEncoding = THREE.sRGBEncoding;
+main.appendChild(renderer.domElement);
+
+// animate
+animate();
 
 // create controls
-let rotate = document.createElement('button');
-rotate.setAttribute('class','rotate');
-let translate = document.createElement('button');
-let controlsContainer = document.createElement('div');
-controlsContainer.setAttribute('class','controls-container');
-controlsContainer.appendChild(rotate);
-controlsContainer.appendChild(translate);
-main.appendChild(controlsContainer);
+configControls();
 
-let displacement = document.createElement('h1');
-displacement.style.margin = '0';
-displacement.innerHTML = '&nbsp;';
-main.appendChild(displacement);
+// ██ helper functions
 
-let dragId = 0;
-let dragStart;
+// animate
+animate();
+function animate() {
+    requestAnimationFrame(animate);
 
-window.onpointerup = e => {
-    if (e.pointerId == dragId) {
-        dragId = 0;
-        rotate.style.background = '#333';
-    }
-}
+    update(); // before each render, update the scene based on gamestate
 
-translate.onpointerdown = e => {
-    translate.style.background = '#484';
-}
+    renderer.render(scene, camera);
+};
 
-translate.onpointerup = e => {
-    translate.style.background = '#333';
-}
-
-rotate.onpointerdown = e => {
-    rotate.style.background = '#484';
-    dragId = e.pointerId;
-    dragStart = e.pageX;
-}
-
-window.onpointermove = e => {
-    if (e.pointerId == dragId) {
-        displacement.textContent = e.pageX - dragStart;
-    }
+// update scene based on gamestate
+function update() {
+    // mesh.rotation.z += 0.01;
 }
 
 // scaleApp()
@@ -69,5 +57,51 @@ function scaleApp() {
         // maximize width, compute height accordingly
         main.style.width = (window.innerWidth).toString() + 'px';
         main.style.height = (window.innerWidth * 1 / appAspectRatio).toString() + 'px';
+    }
+}
+
+function configControls() {
+    let rotate = document.createElement('button');
+    rotate.setAttribute('class','rotate');
+    let translate = document.createElement('button');
+    let controlsContainer = document.createElement('div');
+    controlsContainer.setAttribute('class','controls-container');
+    controlsContainer.appendChild(rotate);
+    controlsContainer.appendChild(translate);
+    main.appendChild(controlsContainer);
+
+    let displacement = document.createElement('h1');
+    displacement.style.margin = '0';
+    displacement.innerHTML = '&nbsp;';
+    main.appendChild(displacement);
+
+    let dragId = 0;
+    let dragStart;
+
+    window.onpointerup = e => {
+        if (e.pointerId == dragId) {
+            dragId = 0;
+            rotate.style.background = '#333';
+        }
+    }
+
+    translate.onpointerdown = e => {
+        translate.style.background = '#484';
+    }
+
+    translate.onpointerup = e => {
+        translate.style.background = '#333';
+    }
+
+    rotate.onpointerdown = e => {
+        rotate.style.background = '#484';
+        dragId = e.pointerId;
+        dragStart = e.pageX;
+    }
+
+    window.onpointermove = e => {
+        if (e.pointerId == dragId) {
+            displacement.textContent = e.pageX - dragStart;
+        }
     }
 }
