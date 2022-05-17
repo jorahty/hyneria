@@ -40,9 +40,13 @@ canvas, button {
     border-radius: 2vh;
 }
 
+button:focus {
+    outline: none;
+}
+
 .controls-container {
-    padding: 2vh;
-    gap: 2vh;
+    padding: 1.3vh;
+    gap: 1.3vh;
     display: flex;
     /* 1/3 of main remains for buttons */
     height: 100%;
