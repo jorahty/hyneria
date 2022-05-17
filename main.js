@@ -1,3 +1,6 @@
+let main = document.createElement('main');
+document.body.appendChild(main);
+
 // let renderer = document.createElement('canvas');
 // document.body.appendChild(renderer);
 
