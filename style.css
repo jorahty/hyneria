@@ -1,5 +1,6 @@
 body {
-    width: min-content;
+    width: 100vw;
+    max-width: 960px;
     margin: 30px auto;
     background: #223355;
 }
@@ -27,6 +28,5 @@ canvas, button {
 }
 
 canvas {
-    width: 512px;
-    height: 512px;
+    width: 100%;
 }
