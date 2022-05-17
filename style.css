@@ -1,3 +1,20 @@
+html,
+body {
+    height: 100%;
+    margin: 0;
+}
+body {
+    -webkit-text-size-adjust: 100%;
+    overflow: hidden;
+    touch-action: none;
+}
+
+body {
+    background: #223355;
+}
+
+
+/* 
 body {
     width: 100vw;
     max-width: 960px;
@@ -29,4 +46,4 @@ canvas, button {
 
 canvas {
     width: 100%;
-}
+} */
