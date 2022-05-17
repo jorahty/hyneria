@@ -12,6 +12,7 @@ main.appendChild(renderer);
 
 // create controls
 let rotate = document.createElement('button');
+rotate.setAttribute('class','rotate');
 let translate = document.createElement('button');
 let controlsContainer = document.createElement('div');
 controlsContainer.setAttribute('class','controls-container');
