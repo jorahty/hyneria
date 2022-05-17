@@ -7,10 +7,11 @@ document.body.appendChild(main);
 // create scene
 let scene = new THREE.Scene();
 let textureLoader = new THREE.TextureLoader();
-let backgroundImage = textureLoader.load('./assets/blue.jpg');
-backgroundImage.mapping = THREE.EquirectangularReflectionMapping;
-backgroundImage.encoding = THREE.sRGBEncoding;
-scene.background = backgroundImage;
+textureLoader.load('./assets/blue.jpg', texture => {
+    texture.mapping = THREE.EquirectangularReflectionMapping;
+    texture.encoding = THREE.sRGBEncoding;
+    scene.background = texture;
+});
 
 // define player geometry
 let geometry = new THREE.ConeGeometry(0.3);
