@@ -14,38 +14,13 @@ body {
 }
 
 main {
-    width: 100%;
-    max-width: 640px;
     margin: 20px auto;
-    box-sizing: border-box;
     border: 2px solid red;
-    height: 100px;
+    box-sizing: border-box;
 }
 
-
-/* 
-body {
-    width: 100vw;
-    max-width: 960px;
-    margin: 30px auto;
-    background: #223355;
-}
-
-button {
-    width: 50%;
-    background: #15223c;
-    cursor: pointer;
-}
-
-button:active {
-    background: #0b2a69;
-}
-
-div {
-    padding: 10px;
-    gap: 10px;
-    display: flex;
-    height: 256px;
+canvas {
+    width: 100%;
 }
 
 canvas, button {
@@ -53,6 +28,15 @@ canvas, button {
     border-radius: 20px;
 }
 
-canvas {
-    width: 100%;
-} */
+div {
+    padding: 10px;
+    gap: 10px;
+    display: flex;
+    height: 25%;
+}
+
+button {
+    flex-grow: 1;
+    background: #15223c;
+    cursor: pointer;
+}
