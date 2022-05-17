@@ -6,9 +6,24 @@ document.body.appendChild(main);
 
 // create scene
 let scene = new THREE.Scene();
+let textureLoader = new THREE.TextureLoader();
+let backgroundImage = textureLoader.load('./assets/blue.jpg');
+backgroundImage.mapping = THREE.EquirectangularReflectionMapping;
+backgroundImage.encoding = THREE.sRGBEncoding;
+scene.background = backgroundImage;
+
+// define player geometry
+let geometry = new THREE.ConeGeometry(0.3);
+let material = new THREE.MeshBasicMaterial({ color: 0x020610 });
+let player = new THREE.Mesh(geometry, material);
+player.rotation.x = - Math.PI / 2;
+scene.add(player);
 
 // create camera
 let camera = new THREE.PerspectiveCamera();
+camera.position.z = 5;
+camera.position.y = 3;
+camera.rotation.x = -0.4;
 
 // create renderer
 let renderer = new THREE.WebGLRenderer({ antialias: true });
@@ -43,7 +58,7 @@ function animate() {
 
 // update scene based on gamestate
 function update() {
-    // mesh.rotation.z += 0.01;
+    player.rotation.z += 0.01;
 }
 
 // scaleApp()
