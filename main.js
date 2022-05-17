@@ -67,7 +67,7 @@ function scaleApp() {
         main.style.width = ((window.innerHeight - verticalMargin) * appAspectRatio).toString() + 'px';
     } else {
         // maximize width, compute height accordingly
-        main.style.width = window.innerWidth;
+        main.style.width = (window.innerWidth).toString() + 'px';
         main.style.height = (window.innerWidth * 1 / appAspectRatio).toString() + 'px';
     }
 }
