@@ -93,12 +93,12 @@ function tick() {
     }
 
     if (controls.rotateState == 't') {
-        player.rotation.x -= 0.04;
+        player.rotateOnAxis(new THREE.Vector3(1, 0, 0), 0.04);
         return;
     }
 
     if (controls.rotateState == 'b') {
-        player.rotation.x += 0.04;
+        player.rotateOnAxis(new THREE.Vector3(1, 0, 0), -0.04);
         return;
     }
 
@@ -109,12 +109,6 @@ function tick() {
 
     if (controls.rotateState == 'r') {
         player.rotateOnWorldAxis(new THREE.Vector3(0, 1, 0), -0.04);
-        return;
-    }
-
-    if (controls.rotateState == 'tr') {
-        // player.rotation.x -= 0.04;
-        // player.rotateOnWorldAxis(new THREE.Vector3(0, 1, 0), -0.04);
         return;
     }
 }
