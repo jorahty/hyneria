@@ -1,4 +1,5 @@
-import * as THREE from 'https://unpkg.com/three/build/three.module.js';
+import * as THREE from 'three';
+import { OutlineEffect } from 'https://unpkg.com/three/examples/jsm/effects/OutlineEffect.js';
 
 // declare global variables
 let dialOrigin = { x: 0, y: 0 };
@@ -38,7 +39,8 @@ renderer.outputEncoding = THREE.sRGBEncoding;
 main.appendChild(renderer.domElement);
 
 // define player geometry
-let geometry = new THREE.ConeGeometry(0.3);
+// let geometry = new THREE.ConeGeometry(0.3, 1, 3);
+let geometry = new THREE.CapsuleGeometry(0.3, 1, 3, 3);
 let material = new THREE.MeshBasicMaterial({ color: 0x020610 });
 let player = new THREE.Mesh(geometry, material);
 player.rotation.x = - Math.PI / 2;
@@ -55,6 +57,12 @@ configControls();
 adaptToWindowSize();
 window.onresize = adaptToWindowSize;
 
+let effect = new OutlineEffect( renderer, {
+    defaultThickness: 0.01,
+    defaultColor: [ 0, 0, 0 ],
+    defaultKeepAlive: true,
+});
+
 // animate
 animate();
 
@@ -65,7 +73,8 @@ function animate() {
 
     update(); // before each render, update the scene based on gamestate
 
-    renderer.render(scene, camera);
+    // renderer.render(scene, camera);
+    effect.render(scene, camera);
 };
 
 // update scene based on gamestate
