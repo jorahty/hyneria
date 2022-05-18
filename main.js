@@ -155,42 +155,41 @@ function input(code) {
     break;
     case 'c':
         dial.style.width = '16%';
-        gsap.to(dial, 0.1, {rotation:"0_short"});
+        dial.style.transform = 'rotate(0deg)';
     break;
     case 'r':
         dial.style.width = '95%';
-        gsap.to(dial, 0.1, {rotation:"0_short"});
+        dial.style.transform = 'rotate(0deg)';
     break;
     case 'tr':
         dial.style.width = '95%';
-        gsap.to(dial, 0.1, {rotation:"-45_short"});
+        dial.style.transform = 'rotate(-45deg)';
     break;
     case 't':
         dial.style.width = '95%';
-        gsap.to(dial, 0.1, {rotation:"-90_short"});
+        dial.style.transform = 'rotate(-90deg)';
     break;
     case 'tl':
         dial.style.width = '95%';
-        gsap.to(dial, 0.1, {rotation:"-135_short"});
+        dial.style.transform = 'rotate(-135deg)';
     break;
     case 'l':
         dial.style.width = '95%';
-        gsap.to(dial, 0.1, {rotation:"-180_short"});
+        dial.style.transform = 'rotate(-180deg)';
     break;
     case 'bl':
         dial.style.width = '95%';
-        gsap.to(dial, 0.1, {rotation:"-225_short"});
-        break;
+        dial.style.transform = 'rotate(-225deg)';
+    break;
     case 'b':
         dial.style.width = '95%';
-        gsap.to(dial, 0.1, {rotation:"-270_short"});
-        break;
+        dial.style.transform = 'rotate(-270deg)';
+    break;
     case 'br':
         dial.style.width = '95%';
-        gsap.to(dial, 0.1, {rotation:"-315_short"});
-        break;
+        dial.style.transform = 'rotate(-315deg)';
+    break;
     }
-
 }
 
 function adaptToWindowSize() {
