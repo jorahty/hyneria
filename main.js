@@ -164,7 +164,6 @@ function input(code) {
     case 'c':
         dial.style.width = '16%';
         dial.style.background = '#15223c';
-        dial.style.transform = 'rotate(0deg)';
     break;
     case 'r':
         dial.style.width = '95%';

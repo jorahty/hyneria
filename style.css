@@ -70,4 +70,7 @@ button:focus {
 
     /* more than enough to completley round corners */
     border-radius: 50vh;
+
+    transition-property: width, transform;
+    transition-duration: 0.2s;
 }
