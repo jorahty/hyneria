@@ -55,6 +55,7 @@ configControls();
 // scale app (and decorate renderer)
 window.onresize = scaleApp;
 scaleApp();
+setTimeout(scaleApp, 1);
 
 // ██ helper functions
 
@@ -77,21 +78,23 @@ function update() {
 // Sets the size and width of the 'main' element.
 function scaleApp() {
     let windowAspectRatio = window.innerWidth / window.innerHeight;
-    let appAspectRatio = 2 / 3.4;
+    let appAspectRatio = 2 / 3.3;
     if (windowAspectRatio > appAspectRatio) {
         // maximize height, compute width accordingly
         main.style.height = (window.innerHeight).toString() + 'px'
         main.style.width = ((window.innerHeight) * appAspectRatio).toString() + 'px';
         renderer.domElement.style.borderWidth = '2px';
         renderer.domElement.style.borderRadius = '20px';
-        controlsContainer.style.padding = '10px 0';
+        controlsContainer.style.padding = '1.3vh 0';
+        main.style.padding = '0';
     } else {
         // maximize width, compute height accordingly
         main.style.width = (window.innerWidth).toString() + 'px';
         main.style.height = (window.innerWidth * 1 / appAspectRatio).toString() + 'px';
         renderer.domElement.style.borderWidth = '2px 0 2px 0';
         renderer.domElement.style.borderRadius = '0';
-        controlsContainer.style.padding = '10px';
+        controlsContainer.style.padding = '1.3vh';
+        main.style.padding = '0';
     }
 }
 

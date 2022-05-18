@@ -27,13 +27,11 @@ main {
     margin: auto;
     display: flex;
     flex-direction: column;
-    padding: 20px 0;
-    border: 1px solid red;
-    box-sizing: border-box;
 }
 
 canvas {
     width: 100%;
+    margin-top: 1.3vh;
     /* canvas aspect ratio is 1 */
     /* canvas occupies 2/3 of main */
 }
@@ -57,11 +55,12 @@ button:focus {
 }
 
 button {
-    flex-grow: 1;
     background: #15223c;
     cursor: pointer;
+    width: 60.713%;
 }
 
 .rotate {
-    flex-grow: 2
+    width: 10%;
+    flex-grow: 1;
 }
