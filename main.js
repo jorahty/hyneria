@@ -148,7 +148,7 @@ function input(code) {
 
     switch (code) {
     case 'translateOn':
-        translate.style.background = '#484';
+        translate.style.background = '#17346d';
     break;
     case 'translateOff':
         translate.style.background = '#15223c';
