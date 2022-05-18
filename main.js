@@ -91,7 +91,7 @@ function tick() {
 let translateIds = new Set();
 let rotateId = null;
 let currentRotateState = 'c';
-let rotateStates = ['c', 'r', 'tr', 't', 'tl', 'l', 'bl', 'b', 'br'];
+let rotateStates = ['r', 'tr', 't', 'tl', 'l', 'bl', 'b', 'br', 'c'];
 
 // configControls()
 // Adds controls to dom
@@ -113,32 +113,32 @@ function configControls() {
     window.onpointerdown = e => {
         // is it a translate pointer?
         if (translate.contains(e.target)) {
-            input('translateOn');
+            input('go');
             translateIds.add(e.pointerId);
             return;
         }
         // it's a rotate pointer
         rotateId = e.pointerId; // set it to THE rotate pointer
-        checkAngle(); // check for rotate event
+        checkAngle(); // check if triggers new rotate state
     }
 
     window.onpointerup = e => {
         // is it a translate pointer?
         if (translate.contains(e.target)) {
-            input('translateOff');
+            input('stop');
             translateIds.delete(e.pointerId);
         }
         // is it the rotate pointer?
         if (e.pointerId == rotateId) {
             input('c');
-            rotateState = 'c';
+            currentRotateState = 'c';
             rotateId = null;
         }
     }
 
     window.onpointermove = e => {
         if (e.pointerId != rotateId) return;
-        checkAngle(); // check for rotate event
+        checkAngle(); // check if triggers new rotate state
     }
 }
 
@@ -155,9 +155,9 @@ function checkAngle() {
 
     // check if angle is in each rs range
     angle = (angle + 22.5) % 360;
-    for (let i = 1; i < 9; i++) {
+    for (let i = 0; i < 8; i++) {
         let rs = rotateStates[i];
-        let inRange = angle > (i - 1) * 45 && angle < (i - 1) * 45 + 45;
+        let inRange = angle > i * 45 && angle < i * 45 + 45;
 
         // if not already in rs and angle is in rs range
         if (currentRotateState != rs && inRange) {
@@ -170,58 +170,34 @@ function checkAngle() {
 // handle input event
 function input(code) {
 
-    switch (code) {
-    case 'translateOn':
-        translate.style.background = '#17346d';
-    break;
-    case 'translateOff':
-        translate.style.background = '#15223c';
-    break;
-    case 'c':
+    // 1. send code to server
+    console.log(code);
+
+    // 2. style controls
+
+    if (code == 'go' || code == 'stop') { // translate input?
+        translate.style.background = (code == 'go') ? '#17346d' : '#15223c';
+        return;
+    }
+
+    if (code == 'c') { // inactive rotate state?
         dial.style.width = '16%';
         dial.style.background = '#15223c';
-    break;
-    case 'r':
-        dial.style.width = '95%';
-        dial.style.background = 'linear-gradient(to right, #15223c, #17346d)';
-        dial.style.transform = 'rotate(0deg)';
-    break;
-    case 'tr':
-        dial.style.width = '95%';
-        dial.style.background = 'linear-gradient(to right, #15223c, #17346d)';
-        dial.style.transform = 'rotate(-45deg)';
-    break;
-    case 't':
-        dial.style.width = '95%';
-        dial.style.background = 'linear-gradient(to right, #15223c, #17346d)';
-        dial.style.transform = 'rotate(-90deg)';
-    break;
-    case 'tl':
-        dial.style.width = '95%';
-        dial.style.background = 'linear-gradient(to right, #15223c, #17346d)';
-        dial.style.transform = 'rotate(-135deg)';
-    break;
-    case 'l':
-        dial.style.width = '95%';
-        dial.style.background = 'linear-gradient(to right, #15223c, #17346d)';
-        dial.style.transform = 'rotate(-180deg)';
-    break;
-    case 'bl':
-        dial.style.width = '95%';
-        dial.style.background = 'linear-gradient(to right, #15223c, #17346d)';
-        dial.style.transform = 'rotate(-225deg)';
-    break;
-    case 'b':
-        dial.style.width = '95%';
-        dial.style.background = 'linear-gradient(to right, #15223c, #17346d)';
-        dial.style.transform = 'rotate(-270deg)';
-    break;
-    case 'br':
-        dial.style.width = '95%';
-        dial.style.background = 'linear-gradient(to right, #15223c, #17346d)';
-        dial.style.transform = 'rotate(-315deg)';
-    break;
+        return;
     }
+
+    // active rotate state
+    dial.style.width = '95%';
+    dial.style.background = 'linear-gradient(to right, #15223c, #17346d)';
+
+    // compute dial angle
+    let index = rotateStates.indexOf(code);
+    let dialAngle = index * 45;
+
+    // rotate dial
+    dial.style.transform = `rotate(${-dialAngle}deg)`;
+
+    // 3. (maybe use for client-side prediction)
 }
 
 function adaptToWindowSize() {
