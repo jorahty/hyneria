@@ -89,38 +89,46 @@ function tick() {
 
 // for managing input 
 let translateIds = new Set();
-let rotateId;
-let rotateState = 'c';
-let rotateStates = ['r', 'tr', 't', 'tl', 'l', 'bl', 'b', 'br'];
+let rotateId = null;
+let currentRotateState = 'c';
+let rotateStates = ['c', 'r', 'tr', 't', 'tl', 'l', 'bl', 'b', 'br'];
 
 // configControls()
 // Adds controls to dom
 // Configures controls to listen for input
 function configControls() {
+
+    // append controls to dom
     main.appendChild(controlsContainer);
     controlsContainer.appendChild(translate);
     controlsContainer.appendChild(dialContainer);
     dialContainer.appendChild(dial);
 
+    // set classes for styling
     controlsContainer.setAttribute('class','controls-container');
     dialContainer.setAttribute('class','dial-container');
     dial.setAttribute('class','dial');
 
+    // listen for pointer down
     window.onpointerdown = e => {
+        // is it a translate pointer?
         if (translate.contains(e.target)) {
             input('translateOn');
             translateIds.add(e.pointerId);
             return;
         }
-        rotateId = e.pointerId;
-        checkAngle();
+        // it's a rotate pointer
+        rotateId = e.pointerId; // set it to THE rotate pointer
+        checkAngle(); // check for rotate event
     }
 
     window.onpointerup = e => {
+        // is it a translate pointer?
         if (translate.contains(e.target)) {
             input('translateOff');
             translateIds.delete(e.pointerId);
         }
+        // is it the rotate pointer?
         if (e.pointerId == rotateId) {
             input('c');
             rotateState = 'c';
@@ -130,23 +138,31 @@ function configControls() {
 
     window.onpointermove = e => {
         if (e.pointerId != rotateId) return;
-        checkAngle();
+        checkAngle(); // check for rotate event
     }
 }
 
 // check if angle calls for rotate dial to be updated
 function checkAngle() {
+    
+    // compute angle
+    // (direction of pointer relative to dial)
     let x = window.event.clientX - dialOrigin.x;
     let y = dialOrigin.y - window.event.clientY;
     let angle = Math.floor(Math.atan(y / x) / Math.PI * 180);
     if (x < 0) angle += 180;
     if (y < 0 && x > 0) angle += 360;
+
+    // check if angle is in each rs range
     angle = (angle + 22.5) % 360;
-    for (let i = 0; i < 8; i++) {
+    for (let i = 1; i < 9; i++) {
         let rs = rotateStates[i];
-        if (rotateState != rs && angle > i * 45 && angle < i * 45 + 45) {
+        let inRange = angle > (i - 1) * 45 && angle < (i - 1) * 45 + 45;
+
+        // if not already in rs and angle is in rs range
+        if (currentRotateState != rs && inRange) {
             input(rs);
-            rotateState = rs;
+            currentRotateState = rs;
         }
     }
 }
