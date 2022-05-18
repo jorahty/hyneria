@@ -79,6 +79,12 @@ function tick() {
 
 }
 
+// for managing input 
+let translateIds = new Set();
+let rotateId;
+let rotateState = 'c';
+let rotateStates = ['r', 'tr', 't', 'tl', 'l', 'bl', 'b', 'br'];
+
 // configControls()
 // Adds controls to dom
 // Configures controls to listen for input
@@ -92,19 +98,52 @@ function configControls() {
     dialContainer.setAttribute('class','dial-container');
     dial.setAttribute('class','dial');
 
-    // window.onpointermove = () => {
-    window.onclick = e => {
-        let translateClicked = translate.contains(e.target);
-        if (translateClicked) {
-            console.log('yes');
+    window.onpointerdown = e => {
+        if (translate.contains(e.target)) {
+            console.log('translateOn');
+            translateIds.add(e.pointerId);
             return;
         }
-        console.log('no');
-        // let x = window.event.clientX - dialOrigin.x;
-        // let y = dialOrigin.y - window.event.clientY;
-        // console.log(x, y);
-        // console.log(Math.atan(y / x) / Math.PI * 180);
+        rotateId = e.pointerId;
+        checkAngle();
     }
+
+    window.onpointerup = e => {
+        if (translate.contains(e.target)) {
+            console.log('translateOff');
+            translateIds.delete(e.pointerId);
+            return;
+        }
+        console.log('c');
+        rotateState = 'c';
+        rotateId = null;
+    }
+
+    window.onpointermove = e => {
+        if (e.pointerId != rotateId) return;
+        checkAngle();
+    }
+}
+
+// check if angle calls for rotate dial to be updated
+function checkAngle() {
+    let x = window.event.clientX - dialOrigin.x;
+    let y = dialOrigin.y - window.event.clientY;
+    let angle = Math.floor(Math.atan(y / x) / Math.PI * 180);
+    if (x < 0) angle += 180;
+    if (y < 0 && x > 0) angle += 360;
+    angle = (angle + 22.5) % 360;
+    for (let i = 0; i < 8; i++) {
+        let rs = rotateStates[i];
+        if (rotateState != rs && angle > i * 45 && angle < i * 45 + 45) {
+            console.log(rs);
+            rotateState = rs;
+        }
+    }
+}
+
+function input() {
+
 }
 
 function adaptToWindowSize() {

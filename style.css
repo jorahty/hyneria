@@ -55,7 +55,7 @@ button:focus {
 .dial-container {
     /* set aspect-ratio to 1 */
     width: 63.945%;
-    /* would rather use aspect-ratio than width */
+    /* would rather use aspect-ratio than width % */
     /* but aspect-ratio appears unsupported on safari */
     /* aspect-ratio: 1; */
     display: flex;
