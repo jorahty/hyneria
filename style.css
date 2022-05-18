@@ -42,7 +42,7 @@ canvas, button, .dial {
 
 button {
     flex-grow: 1; /* fill remaining space */
-    border-radius: 1.3vh;
+    border-radius: 2vh;
     background: #15223c;
     cursor: pointer;
     padding: 0;
