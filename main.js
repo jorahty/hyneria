@@ -101,6 +101,7 @@ function configControls() {
     window.onpointerdown = e => {
         if (translate.contains(e.target)) {
             console.log('translateOn');
+            input('translateOn');
             translateIds.add(e.pointerId);
             return;
         }
@@ -111,12 +112,15 @@ function configControls() {
     window.onpointerup = e => {
         if (translate.contains(e.target)) {
             console.log('translateOff');
+            input('translateOff');
             translateIds.delete(e.pointerId);
-            return;
         }
-        console.log('c');
-        rotateState = 'c';
-        rotateId = null;
+        if (e.pointerId == rotateId) {
+            console.log('c');
+            input('c');
+            rotateState = 'c';
+            rotateId = null;
+        }
     }
 
     window.onpointermove = e => {
@@ -137,12 +141,59 @@ function checkAngle() {
         let rs = rotateStates[i];
         if (rotateState != rs && angle > i * 45 && angle < i * 45 + 45) {
             console.log(rs);
+            input(rs);
             rotateState = rs;
         }
     }
 }
 
-function input() {
+// handle input event
+function input(code) {
+
+    switch (code) {
+    case 'translateOn':
+        translate.style.background = '#484';
+    break;
+    case 'translateOff':
+        translate.style.background = '#15223c';
+    break;
+    case 'c':
+        dial.style.width = '16%';
+        dial.style.transform = 'rotate(0deg)';
+    break;
+    case 'r':
+        dial.style.width = '95%';
+        dial.style.transform = 'rotate(0deg)';
+    break;
+    case 'tr':
+        dial.style.width = '95%';
+        dial.style.transform = 'rotate(-45deg)';
+    break;
+    case 't':
+        dial.style.width = '95%';
+        dial.style.transform = 'rotate(-90deg)';
+    break;
+    case 'tl':
+        dial.style.width = '95%';
+        dial.style.transform = 'rotate(-135deg)';
+    break;
+    case 'l':
+        dial.style.width = '95%';
+        dial.style.transform = 'rotate(-180deg)';
+    break;
+    case 'bl':
+        dial.style.width = '95%';
+        dial.style.transform = 'rotate(-225deg)';
+    break;
+    case 'b':
+        dial.style.width = '95%';
+        dial.style.transform = 'rotate(-270deg)';
+    break;
+    case 'br':
+        dial.style.width = '95%';
+        dial.style.transform = 'rotate(-315deg)';
+    break;
+    }
 
 }
 
