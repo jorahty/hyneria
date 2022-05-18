@@ -1,5 +1,8 @@
 import * as THREE from 'https://unpkg.com/three/build/three.module.js';
 
+// declare global variables
+let dialOrigin = { x: 0, y: 0 };
+
 // define gamestate
 let gamestate = {};
 
@@ -48,9 +51,9 @@ let dialContainer = document.createElement('div');
 let dial = document.createElement('div');
 configControls();
 
-// adjust dom according to the window aspect ratio
-AdjustDom();
-window.onresize = AdjustDom;
+// adapt to window size
+adaptToWindowSize();
+window.onresize = adaptToWindowSize;
 
 // animate
 animate();
@@ -88,10 +91,24 @@ function configControls() {
     controlsContainer.setAttribute('class','controls-container');
     dialContainer.setAttribute('class','dial-container');
     dial.setAttribute('class','.dial');
+
+    // window.onpointermove = () => {
+    window.onclick = e => {
+        let translateClicked = translate.contains(e.target);
+        if (translateClicked) {
+            console.log('yes');
+            return;
+        }
+        console.log('no');
+        // let x = window.event.clientX - dialOrigin.x;
+        // let y = dialOrigin.y - window.event.clientY;
+        // console.log(x, y);
+        // console.log(Math.atan(y / x) / Math.PI * 180);
+    }
 }
 
-// Adjust dom with respect to window aspectRatio
-function AdjustDom() {
+function adaptToWindowSize() {
+    // adjust dom with respect to window aspectRatio
     let windowAspectRatio = window.innerWidth / window.innerHeight;
     let appAspectRatio = 0.6;
     let topMargin = 0.013 * window.innerHeight;
@@ -111,5 +128,17 @@ function AdjustDom() {
         renderer.domElement.style.borderRadius = '0';
         controlsContainer.style.padding = '1.3vh';
         main.style.marginTop = '0';
+    }
+
+    // get dial origin
+    // (so that we can compare it to pointer position)
+    dialOrigin = domPosition(dialContainer)
+}
+
+function domPosition(el) {
+    var rect = el.getBoundingClientRect();
+    return {
+        x: (rect.right + rect.left) / 2,
+        y: (rect.bottom + rect.top) / 2
     }
 }
