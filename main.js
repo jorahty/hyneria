@@ -7,6 +7,11 @@ let dialOrigin = { x: 0, y: 0 };
 // define gamestate
 let gamestate = {};
 
+let controls = {
+    translate: false,
+    rotateState: 'c'
+}
+
 // establish connection to server
 
 // upon recieving update from server, update gamestate
@@ -39,7 +44,8 @@ renderer.outputEncoding = THREE.sRGBEncoding;
 main.appendChild(renderer.domElement);
 
 // define player geometry
-let geometry = new THREE.CapsuleGeometry(0.3, 1, 2, 3);
+// let geometry = new THREE.CapsuleGeometry(0.3, 1, 2, 3);
+let geometry = new THREE.ConeGeometry(0.3, 3);
 let material = new THREE.MeshBasicMaterial({ color: 0x020610 });
 let player = new THREE.Mesh(geometry, material);
 player.rotation.x = - Math.PI / 2;
@@ -56,14 +62,12 @@ configControls();
 adaptToWindowSize();
 window.onresize = adaptToWindowSize;
 
+// init outline effect
 let effect = new OutlineEffect( renderer, {
     defaultThickness: 0.007,
     defaultColor: [ 0, 0, 0 ],
     defaultKeepAlive: true,
 });
-
-// animate
-animate();
 
 // animate
 animate();
@@ -78,13 +82,41 @@ function animate() {
 
 // update scene based on gamestate
 function update() {
-    player.rotation.z += 0.01;
+    // player.rotateOnWorldAxis(new THREE.Vector3(0, 1, 0), 0.01);
 }
 
 // step/simulate the gamestate forward in time (based on input)
-// setInterval(tick, 1000 / 30);
+setInterval(tick, 1000 / 30);
 function tick() {
+    if (controls.translate) {
+        player.translateY(0.04);
+    }
 
+    if (controls.rotateState == 't') {
+        player.rotation.x -= 0.04;
+        return;
+    }
+
+    if (controls.rotateState == 'b') {
+        player.rotation.x += 0.04;
+        return;
+    }
+
+    if (controls.rotateState == 'l') {
+        player.rotateOnWorldAxis(new THREE.Vector3(0, 1, 0), 0.04);
+        return;
+    }
+
+    if (controls.rotateState == 'r') {
+        player.rotateOnWorldAxis(new THREE.Vector3(0, 1, 0), -0.04);
+        return;
+    }
+
+    if (controls.rotateState == 'tr') {
+        // player.rotation.x -= 0.04;
+        // player.rotateOnWorldAxis(new THREE.Vector3(0, 1, 0), -0.04);
+        return;
+    }
 }
 
 // for managing input 
@@ -171,7 +203,9 @@ function checkAngle() {
 function input(code) {
 
     // 1. send code to server
-    console.log(code);
+    if (code == 'go') controls.translate = true;
+    if (code == 'stop') controls.translate = false;
+    controls.rotateState = code;
 
     // 2. style controls
 
