@@ -29,7 +29,7 @@ main {
     flex-direction: column;
 }
 
-canvas, button {
+canvas, button, .dial {
     border: 2px solid #000;
     box-sizing: border-box;
 }
@@ -58,5 +58,19 @@ button:focus {
     /* would rather use aspect-ratio than width */
     /* but aspect-ratio appears unsupported on safari */
     /* aspect-ratio: 1; */
-    background: #15223c44;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.dial {
+    background: #15223c;
+    transform: rotate(45deg);
+    height: 16%;
+
+    /* slightly less than 100% bc aspect ratio ≠ 1 */
+    width: 95%; 
+
+    /* more than enough to completley round corners */
+    border-radius: 50vh;
 }

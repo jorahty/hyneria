@@ -90,7 +90,7 @@ function configControls() {
 
     controlsContainer.setAttribute('class','controls-container');
     dialContainer.setAttribute('class','dial-container');
-    dial.setAttribute('class','.dial');
+    dial.setAttribute('class','dial');
 
     // window.onpointermove = () => {
     window.onclick = e => {
