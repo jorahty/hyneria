@@ -65,11 +65,8 @@ button:focus {
 
 .dial {
     background: #15223c;
-    transform: rotate(45deg);
     height: 16%;
-
-    /* slightly less than 100% bc aspect ratio ≠ 1 */
-    width: 95%; 
+    width: 16%; 
 
     /* more than enough to completley round corners */
     border-radius: 50vh;

@@ -100,7 +100,6 @@ function configControls() {
 
     window.onpointerdown = e => {
         if (translate.contains(e.target)) {
-            console.log('translateOn');
             input('translateOn');
             translateIds.add(e.pointerId);
             return;
@@ -111,12 +110,10 @@ function configControls() {
 
     window.onpointerup = e => {
         if (translate.contains(e.target)) {
-            console.log('translateOff');
             input('translateOff');
             translateIds.delete(e.pointerId);
         }
         if (e.pointerId == rotateId) {
-            console.log('c');
             input('c');
             rotateState = 'c';
             rotateId = null;
@@ -140,7 +137,6 @@ function checkAngle() {
     for (let i = 0; i < 8; i++) {
         let rs = rotateStates[i];
         if (rotateState != rs && angle > i * 45 && angle < i * 45 + 45) {
-            console.log(rs);
             input(rs);
             rotateState = rs;
         }
@@ -159,40 +155,40 @@ function input(code) {
     break;
     case 'c':
         dial.style.width = '16%';
-        dial.style.transform = 'rotate(0deg)';
+        gsap.to(dial, 0.1, {rotation:"0_short"});
     break;
     case 'r':
         dial.style.width = '95%';
-        dial.style.transform = 'rotate(0deg)';
+        gsap.to(dial, 0.1, {rotation:"0_short"});
     break;
     case 'tr':
         dial.style.width = '95%';
-        dial.style.transform = 'rotate(-45deg)';
+        gsap.to(dial, 0.1, {rotation:"-45_short"});
     break;
     case 't':
         dial.style.width = '95%';
-        dial.style.transform = 'rotate(-90deg)';
+        gsap.to(dial, 0.1, {rotation:"-90_short"});
     break;
     case 'tl':
         dial.style.width = '95%';
-        dial.style.transform = 'rotate(-135deg)';
+        gsap.to(dial, 0.1, {rotation:"-135_short"});
     break;
     case 'l':
         dial.style.width = '95%';
-        dial.style.transform = 'rotate(-180deg)';
+        gsap.to(dial, 0.1, {rotation:"-180_short"});
     break;
     case 'bl':
         dial.style.width = '95%';
-        dial.style.transform = 'rotate(-225deg)';
-    break;
+        gsap.to(dial, 0.1, {rotation:"-225_short"});
+        break;
     case 'b':
         dial.style.width = '95%';
-        dial.style.transform = 'rotate(-270deg)';
-    break;
+        gsap.to(dial, 0.1, {rotation:"-270_short"});
+        break;
     case 'br':
         dial.style.width = '95%';
-        dial.style.transform = 'rotate(-315deg)';
-    break;
+        gsap.to(dial, 0.1, {rotation:"-315_short"});
+        break;
     }
 
 }
