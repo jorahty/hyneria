@@ -111,6 +111,30 @@ function tick() {
         player.rotateOnWorldAxis(new THREE.Vector3(0, 1, 0), -0.04);
         return;
     }
+
+    if (controls.rotateState == 'tr') {
+        player.rotateOnAxis(new THREE.Vector3(1, 0, 0), 0.02);
+        player.rotateOnWorldAxis(new THREE.Vector3(0, 1, 0), -0.02);
+        return;
+    }
+
+    if (controls.rotateState == 'tl') {
+        player.rotateOnAxis(new THREE.Vector3(1, 0, 0), 0.02);
+        player.rotateOnWorldAxis(new THREE.Vector3(0, 1, 0), 0.02);
+        return;
+    }
+
+    if (controls.rotateState == 'bl') {
+        player.rotateOnAxis(new THREE.Vector3(1, 0, 0), -0.02);
+        player.rotateOnWorldAxis(new THREE.Vector3(0, 1, 0), 0.02);
+        return;
+    }
+
+    if (controls.rotateState == 'br') {
+        player.rotateOnAxis(new THREE.Vector3(1, 0, 0), -0.02);
+        player.rotateOnWorldAxis(new THREE.Vector3(0, 1, 0), -0.02);
+        return;
+    }
 }
 
 // for managing input 
