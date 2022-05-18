@@ -1,5 +1,13 @@
 import * as THREE from 'https://unpkg.com/three/build/three.module.js';
 
+// let gamestate = {
+//     x:
+//     y:
+//     z:
+//     hr:
+//     vr:
+// };
+
 // create 'main' element
 let main = document.createElement('main');
 document.body.appendChild(main);
@@ -7,7 +15,7 @@ document.body.appendChild(main);
 // create scene
 let scene = new THREE.Scene();
 let textureLoader = new THREE.TextureLoader();
-textureLoader.load('./assets/blue.jpg', texture => {
+textureLoader.load('https://cse120.jorahty.repl.co/blue.jpg', texture => {
     texture.mapping = THREE.EquirectangularReflectionMapping;
     texture.encoding = THREE.sRGBEncoding;
     scene.background = texture;
@@ -35,15 +43,18 @@ renderer.domElement.style.height = 'auto';
 renderer.outputEncoding = THREE.sRGBEncoding;
 main.appendChild(renderer.domElement);
 
-// scale app (and decorate renderer)
-window.onresize = scaleApp;
-scaleApp();
-
 // animate
 animate();
 
 // create controls
+let rotate = document.createElement('button');
+let translate = document.createElement('button');
+let controlsContainer = document.createElement('div');
 configControls();
+
+// scale app (and decorate renderer)
+window.onresize = scaleApp;
+scaleApp();
 
 // ██ helper functions
 
@@ -66,28 +77,35 @@ function update() {
 // Sets the size and width of the 'main' element.
 function scaleApp() {
     let windowAspectRatio = window.innerWidth / window.innerHeight;
-    let appAspectRatio = 2 / 3;
-    let verticalMargin = 40;
+    let appAspectRatio = 2 / 3.4;
     if (windowAspectRatio > appAspectRatio) {
         // maximize height, compute width accordingly
-        main.style.height = (window.innerHeight - verticalMargin).toString() + 'px'
-        main.style.width = ((window.innerHeight - verticalMargin) * appAspectRatio).toString() + 'px';
+        main.style.height = (window.innerHeight).toString() + 'px'
+        main.style.width = ((window.innerHeight) * appAspectRatio).toString() + 'px';
         renderer.domElement.style.borderWidth = '2px';
         renderer.domElement.style.borderRadius = '20px';
+        controlsContainer.style.padding = '10px 0';
     } else {
         // maximize width, compute height accordingly
         main.style.width = (window.innerWidth).toString() + 'px';
         main.style.height = (window.innerWidth * 1 / appAspectRatio).toString() + 'px';
         renderer.domElement.style.borderWidth = '2px 0 2px 0';
         renderer.domElement.style.borderRadius = '0';
+        controlsContainer.style.padding = '10px';
     }
 }
 
+// on touch move,
+//  if touch id is the drag id
+//     compute panOffset (from initPanPosition)
+//     use offset to set playerRotation relative to initPlayerRotation
+//     keep vertical rotation in range
+
+
+// controls should listen for input,
+// and modify the *gamestate* accordingly
 function configControls() {
-    let rotate = document.createElement('button');
     rotate.setAttribute('class','rotate');
-    let translate = document.createElement('button');
-    let controlsContainer = document.createElement('div');
     controlsContainer.setAttribute('class','controls-container');
     controlsContainer.appendChild(rotate);
     controlsContainer.appendChild(translate);

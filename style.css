@@ -24,9 +24,12 @@ body {
 }
 
 main {
-    margin: 20px auto;
+    margin: auto;
     display: flex;
     flex-direction: column;
+    padding: 20px 0;
+    border: 1px solid red;
+    box-sizing: border-box;
 }
 
 canvas {
@@ -38,6 +41,7 @@ canvas {
 canvas, button {
     border: 2px solid black;
     border-radius: 2vh;
+    box-sizing: border-box;
 }
 
 button:focus {
