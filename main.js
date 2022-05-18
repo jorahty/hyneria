@@ -155,38 +155,47 @@ function input(code) {
     break;
     case 'c':
         dial.style.width = '16%';
+        dial.style.background = '#15223c';
         dial.style.transform = 'rotate(0deg)';
     break;
     case 'r':
         dial.style.width = '95%';
+        dial.style.background = 'linear-gradient(to right, #15223c, #17346d)';
         dial.style.transform = 'rotate(0deg)';
     break;
     case 'tr':
         dial.style.width = '95%';
+        dial.style.background = 'linear-gradient(to right, #15223c, #17346d)';
         dial.style.transform = 'rotate(-45deg)';
     break;
     case 't':
         dial.style.width = '95%';
+        dial.style.background = 'linear-gradient(to right, #15223c, #17346d)';
         dial.style.transform = 'rotate(-90deg)';
     break;
     case 'tl':
         dial.style.width = '95%';
+        dial.style.background = 'linear-gradient(to right, #15223c, #17346d)';
         dial.style.transform = 'rotate(-135deg)';
     break;
     case 'l':
         dial.style.width = '95%';
+        dial.style.background = 'linear-gradient(to right, #15223c, #17346d)';
         dial.style.transform = 'rotate(-180deg)';
     break;
     case 'bl':
         dial.style.width = '95%';
+        dial.style.background = 'linear-gradient(to right, #15223c, #17346d)';
         dial.style.transform = 'rotate(-225deg)';
     break;
     case 'b':
         dial.style.width = '95%';
+        dial.style.background = 'linear-gradient(to right, #15223c, #17346d)';
         dial.style.transform = 'rotate(-270deg)';
     break;
     case 'br':
         dial.style.width = '95%';
+        dial.style.background = 'linear-gradient(to right, #15223c, #17346d)';
         dial.style.transform = 'rotate(-315deg)';
     break;
     }
