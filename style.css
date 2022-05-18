@@ -35,13 +35,13 @@ canvas, button {
 }
 
 .controls-container {
-    flex-grow: 1;
+    flex-grow: 1; /* fill remaining space */
     display: flex;
     gap: 1.3vh;
 }
 
 button {
-    flex-grow: 1;
+    flex-grow: 1; /* fill remaining space */
     border-radius: 1.3vh;
     background: #15223c;
     cursor: pointer;

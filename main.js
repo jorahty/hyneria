@@ -41,9 +41,6 @@ let player = new THREE.Mesh(geometry, material);
 player.rotation.x = - Math.PI / 2;
 scene.add(player);
 
-// animate
-animate();
-
 // create controls
 let controlsContainer = document.createElement('section');
 let translate = document.createElement('button');
@@ -51,11 +48,12 @@ let dialContainer = document.createElement('div');
 let dial = document.createElement('div');
 configControls();
 
-// adapt to window aspect ratio
-adaptToWindowAspectRatio();
-window.onresize = adaptToWindowAspectRatio;
+// adjust dom according to the window aspect ratio
+AdjustDom();
+window.onresize = AdjustDom;
 
-// ██ helper functions
+// animate
+animate();
 
 // animate
 animate();
@@ -72,11 +70,11 @@ function update() {
     player.rotation.z += 0.01;
 }
 
-// // step/simulate the gamestate forward in time (based on input)
+// step/simulate the gamestate forward in time (based on input)
 // setInterval(tick, 1000 / 30);
-// function tick() {
-//     // pass
-// }
+function tick() {
+
+}
 
 // configControls()
 // Adds controls to dom
@@ -92,7 +90,8 @@ function configControls() {
     dial.setAttribute('class','.dial');
 }
 
-function adaptToWindowAspectRatio() {
+// Adjust dom with respect to window aspectRatio
+function AdjustDom() {
     let windowAspectRatio = window.innerWidth / window.innerHeight;
     let appAspectRatio = 0.6;
     let topMargin = 0.013 * window.innerHeight;
