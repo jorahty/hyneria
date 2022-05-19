@@ -55,7 +55,7 @@ main.appendChild(renderer.domElement);
 
 // define player geometry
 let geometry = new THREE.ConeGeometry(0.3);
-let material = new THREE.MeshBasicMaterial({ color: 0x020610 });
+let material = new THREE.MeshMatcapMaterial({ color: 0x1d3010 });
 let player = new THREE.Mesh(geometry, material);
 player.quaternion.copy(new THREE.Quaternion());
 let phi = 0;
@@ -97,11 +97,16 @@ function animate() {
 function update() {
     
     // focus camera on player
-    camera.position.z = player.position.z + 5;
-    camera.position.y = player.position.y + 3;
-    camera.rotation.x = player.position.x - 0.4;
+    const idealOffset = new THREE.Vector3(0, -5, 3);
+    idealOffset.applyQuaternion(player.quaternion);
+    idealOffset.add(player.position);
+    camera.position.copy(idealOffset);
 
-    camera.lookAt(player.position.x, player.position.y + 1.5, player.position.z);
+    const idealLookat = new THREE.Vector3(0, 2.5, 0);
+    idealLookat.applyQuaternion(player.quaternion);
+    idealLookat.add(player.position);
+    camera.lookAt(idealLookat);
+
 }
 
 
@@ -111,7 +116,7 @@ function update() {
 function updateRotation(xh, yv) {
     phi += xh;
     theta += yv;
-    theta = clamp(theta, -Math.PI, 0);
+    theta = clamp(theta, -Math.PI + 0.39, 0);
 
     let q = new THREE.Quaternion();
     q.setFromEuler(new THREE.Euler(theta, 0, 0, 'XYZ'));
