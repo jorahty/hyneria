@@ -1,12 +1,15 @@
 import * as THREE from 'three';
 import { OutlineEffect } from 'https://unpkg.com/three/examples/jsm/effects/OutlineEffect.js';
 
+const clamp = (num, min, max) => Math.min(Math.max(num, min), max);
+
 // declare global variables
 let dialOrigin = { x: 0, y: 0 };
 
 // define gamestate
 let gamestate = {};
 
+// SERVER
 let controls = {
     translate: false,
     rotateState: 'c'
@@ -48,7 +51,10 @@ main.appendChild(renderer.domElement);
 let geometry = new THREE.ConeGeometry(0.3, 3);
 let material = new THREE.MeshBasicMaterial({ color: 0x020610 });
 let player = new THREE.Mesh(geometry, material);
-player.rotation.x = - Math.PI / 2;
+player.quaternion.copy(new THREE.Quaternion());
+let phi = 0;
+let theta = - Math.PI / 2;
+updateRotation(0, 0);
 scene.add(player);
 
 // create controls
@@ -74,17 +80,35 @@ animate();
 function animate() {
     requestAnimationFrame(animate);
 
-    update(); // before each render, update the scene based on gamestate
+    // update(); // before each render, update the scene based on gamestate
 
     // renderer.render(scene, camera);
     effect.render(scene, camera);
 };
 
 // update scene based on gamestate
-function update() {
+// function update() {
     // player.rotateOnWorldAxis(new THREE.Vector3(0, 1, 0), 0.01);
+// }
+
+
+
+// SERVER
+// update player's rotation
+function updateRotation(xh, yv) {
+    phi += xh;
+    theta += yv;
+    theta = clamp(theta, -Math.PI, 0);
+
+    let q = new THREE.Quaternion();
+    q.setFromEuler(new THREE.Euler(theta, 0, 0, 'XYZ'));
+    player.quaternion.copy(q);
+
+    player.rotateOnWorldAxis(new THREE.Vector3(0, 1, 0), phi);
 }
 
+
+// SERVER
 // step/simulate the gamestate forward in time (based on input)
 setInterval(tick, 1000 / 30);
 function tick() {
@@ -92,48 +116,15 @@ function tick() {
         player.translateY(0.04);
     }
 
-    if (controls.rotateState == 't') {
-        player.rotateOnAxis(new THREE.Vector3(1, 0, 0), 0.04);
-        return;
-    }
-
-    if (controls.rotateState == 'b') {
-        player.rotateOnAxis(new THREE.Vector3(1, 0, 0), -0.04);
-        return;
-    }
-
-    if (controls.rotateState == 'l') {
-        player.rotateOnWorldAxis(new THREE.Vector3(0, 1, 0), 0.04);
-        return;
-    }
-
-    if (controls.rotateState == 'r') {
-        player.rotateOnWorldAxis(new THREE.Vector3(0, 1, 0), -0.04);
-        return;
-    }
-
-    if (controls.rotateState == 'tr') {
-        player.rotateOnAxis(new THREE.Vector3(1, 0, 0), 0.02);
-        player.rotateOnWorldAxis(new THREE.Vector3(0, 1, 0), -0.02);
-        return;
-    }
-
-    if (controls.rotateState == 'tl') {
-        player.rotateOnAxis(new THREE.Vector3(1, 0, 0), 0.02);
-        player.rotateOnWorldAxis(new THREE.Vector3(0, 1, 0), 0.02);
-        return;
-    }
-
-    if (controls.rotateState == 'bl') {
-        player.rotateOnAxis(new THREE.Vector3(1, 0, 0), -0.02);
-        player.rotateOnWorldAxis(new THREE.Vector3(0, 1, 0), 0.02);
-        return;
-    }
-
-    if (controls.rotateState == 'br') {
-        player.rotateOnAxis(new THREE.Vector3(1, 0, 0), -0.02);
-        player.rotateOnWorldAxis(new THREE.Vector3(0, 1, 0), -0.02);
-        return;
+    switch (controls.rotateState) {
+    case 't': updateRotation(0, 0.05); break;
+    case 'b': updateRotation(0, -0.05); break;
+    case 'l': updateRotation(0.05, 0); break;
+    case 'r': updateRotation(-0.05, 0); break;
+    case 'tr': updateRotation(-0.025, 0.025); break;
+    case 'tl': updateRotation(0.025, 0.025); break;
+    case 'bl': updateRotation(0.025, -0.025); break;
+    case 'br': updateRotation(-0.025, -0.025); break;
     }
 }
 
@@ -159,7 +150,7 @@ function configControls() {
     dialContainer.setAttribute('class','dial-container');
     dial.setAttribute('class','dial');
 
-    // listen for pointer down
+    // listen for input
     window.onpointerdown = e => {
         // is it a translate pointer?
         if (translate.contains(e.target)) {
