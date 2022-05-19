@@ -55,7 +55,7 @@ main.appendChild(renderer.domElement);
 
 // define player geometry
 let geometry = new THREE.ConeGeometry(0.3);
-let material = new THREE.MeshMatcapMaterial({ color: 0x1d3010 });
+let material = new THREE.MeshMatcapMaterial({ color: 0x0d5c43 });
 let player = new THREE.Mesh(geometry, material);
 player.quaternion.copy(new THREE.Quaternion());
 let phi = 0;
@@ -131,18 +131,18 @@ function updateRotation(xh, yv) {
 setInterval(tick, 1000 / 30);
 function tick() {
     if (controls.translate) {
-        player.translateY(0.04);
+        player.translateY(0.07);
     }
 
     switch (controls.rotateState) {
-    case 't': updateRotation(0, 0.05); break;
-    case 'b': updateRotation(0, -0.05); break;
-    case 'l': updateRotation(0.05, 0); break;
-    case 'r': updateRotation(-0.05, 0); break;
-    case 'tr': updateRotation(-0.025, 0.025); break;
-    case 'tl': updateRotation(0.025, 0.025); break;
-    case 'bl': updateRotation(0.025, -0.025); break;
-    case 'br': updateRotation(-0.025, -0.025); break;
+    case 't': updateRotation(0, 0.1); break;
+    case 'b': updateRotation(0, -0.1); break;
+    case 'l': updateRotation(0.1, 0); break;
+    case 'r': updateRotation(-0.1, 0); break;
+    case 'tr': updateRotation(-0.05, 0.05); break;
+    case 'tl': updateRotation(0.05, 0.05); break;
+    case 'bl': updateRotation(0.05, -0.05); break;
+    case 'br': updateRotation(-0.05, -0.05); break;
     }
 }
 
