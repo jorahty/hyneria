@@ -1,6 +1,7 @@
 import * as THREE from 'three';
 import { OutlineEffect } from 'https://unpkg.com/three/examples/jsm/effects/OutlineEffect.js';
 
+let renderer;
 const clamp = (num, min, max) => Math.min(Math.max(num, min), max);
 
 // declare global variables
@@ -23,15 +24,6 @@ let controls = {
 let main = document.createElement('main');
 document.body.appendChild(main);
 
-// create renderer
-let renderer = new THREE.WebGLRenderer({ antialias: true });
-renderer.setSize(512, 512);
-renderer.domElement.style.width = '100%';
-renderer.domElement.style.height = 'auto';
-renderer.domElement.style.display = 'none';
-renderer.outputEncoding = THREE.sRGBEncoding;
-main.appendChild(renderer.domElement);
-
 // create scene
 let scene = new THREE.Scene();
 let textureLoader = new THREE.TextureLoader();
@@ -40,6 +32,7 @@ textureLoader.load('https://cse120.jorahty.repl.co/blue.jpg', texture => {
     texture.encoding = THREE.sRGBEncoding;
     scene.background = texture;
     renderer.domElement.style.display = 'block';
+    adaptToWindowSize();
 });
 
 // decorate scene with plankton
@@ -51,7 +44,14 @@ camera.position.z = 5;
 camera.position.y = 3;
 camera.rotation.x = -0.4;
 
-
+// create renderer
+renderer = new THREE.WebGLRenderer({ antialias: true });
+renderer.setSize(512, 512);
+renderer.domElement.style.width = '100%';
+renderer.domElement.style.height = 'auto';
+renderer.domElement.style.display = 'none';
+renderer.outputEncoding = THREE.sRGBEncoding;
+main.appendChild(renderer.domElement);
 
 // define player geometry
 // let geometry = new THREE.CapsuleGeometry(0.3, 1, 2, 3);
