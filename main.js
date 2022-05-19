@@ -295,9 +295,9 @@ function domPosition(el) {
 
 // decorate scene with plankton
 function decorate() {
-    let geometry = new THREE.SphereGeometry(0.05);
+    let geometry = new THREE.SphereGeometry(0.013);
     for (let i = 0; i < 400; i++) {
-        let material = new THREE.MeshBasicMaterial({ color: Math.random() * 0xffffff });
+        let material = new THREE.MeshBasicMaterial({ color: 0x91d7ff });
         let mesh = new THREE.Mesh(geometry, material);
         mesh.position.x = -10 + Math.random() * 20;
         mesh.position.y = -10 + Math.random() * 20;
