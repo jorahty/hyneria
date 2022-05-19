@@ -32,6 +32,9 @@ textureLoader.load('https://cse120.jorahty.repl.co/blue.jpg', texture => {
     scene.background = texture;
 });
 
+// decorate scene with plankton
+decorate();
+
 // create camera
 let camera = new THREE.PerspectiveCamera();
 camera.position.z = 5;
@@ -80,16 +83,23 @@ animate();
 function animate() {
     requestAnimationFrame(animate);
 
-    // update(); // before each render, update the scene based on gamestate
+    update(); // before each render, update the scene based on gamestate
 
     // renderer.render(scene, camera);
-    effect.render(scene, camera);
+    // effect.render(scene, camera);
+    renderer.render(scene, camera);
 };
 
 // update scene based on gamestate
-// function update() {
-    // player.rotateOnWorldAxis(new THREE.Vector3(0, 1, 0), 0.01);
-// }
+function update() {
+    
+    // focus camera on player
+    camera.position.z = player.position.z + 5;
+    camera.position.y = player.position.y + 3;
+    camera.rotation.x = player.position.x - 0.4;
+
+    camera.lookAt(player.position.x, player.position.y, player.position.z);
+}
 
 
 
@@ -271,10 +281,24 @@ function adaptToWindowSize() {
     dialOrigin = domPosition(dialContainer)
 }
 
+// returns {x, y} coordinates of dom element el
 function domPosition(el) {
     var rect = el.getBoundingClientRect();
     return {
         x: (rect.right + rect.left) / 2,
         y: (rect.bottom + rect.top) / 2
+    }
+}
+
+// decorate scene with plankton
+function decorate() {
+    let geometry = new THREE.SphereGeometry(0.05);
+    for (let i = 0; i < 400; i++) {
+        let material = new THREE.MeshBasicMaterial({ color: Math.random() * 0xffffff });
+        let mesh = new THREE.Mesh(geometry, material);
+        mesh.position.x = -10 + Math.random() * 20;
+        mesh.position.y = -10 + Math.random() * 20;
+        mesh.position.z = -10 + Math.random() * 20;
+        scene.add(mesh);
     }
 }
