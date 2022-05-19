@@ -54,8 +54,7 @@ renderer.outputEncoding = THREE.sRGBEncoding;
 main.appendChild(renderer.domElement);
 
 // define player geometry
-// let geometry = new THREE.CapsuleGeometry(0.3, 1, 2, 3);
-let geometry = new THREE.ConeGeometry(0.3, 3);
+let geometry = new THREE.ConeGeometry(0.3);
 let material = new THREE.MeshBasicMaterial({ color: 0x020610 });
 let player = new THREE.Mesh(geometry, material);
 player.quaternion.copy(new THREE.Quaternion());
@@ -102,7 +101,7 @@ function update() {
     camera.position.y = player.position.y + 3;
     camera.rotation.x = player.position.x - 0.4;
 
-    camera.lookAt(player.position.x, player.position.y, player.position.z);
+    camera.lookAt(player.position.x, player.position.y + 1.5, player.position.z);
 }
 
 
