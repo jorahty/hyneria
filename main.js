@@ -39,7 +39,7 @@ textureLoader.load('https://cse120.jorahty.repl.co/blue.jpg', texture => {
 decorate();
 
 // create camera
-let camera = new THREE.PerspectiveCamera();
+let camera = new THREE.PerspectiveCamera(90);
 camera.position.z = 5;
 camera.position.y = 3;
 camera.rotation.x = -0.4;
@@ -81,6 +81,10 @@ let effect = new OutlineEffect( renderer, {
     defaultKeepAlive: true,
 });
 
+
+const currentPosition = new THREE.Vector3();
+const currentLookat = new THREE.Vector3();
+
 // animate
 animate();
 function animate() {
@@ -95,24 +99,50 @@ function animate() {
 
 // update scene based on gamestate
 function update() {
+
+    const t = 0.2;
     
     // focus camera on player
-    const idealOffset = new THREE.Vector3(0, -5, 3);
+    const idealOffset = new THREE.Vector3(0, -2.5, 1.8);
     idealOffset.applyQuaternion(player.quaternion);
     idealOffset.add(player.position);
-    camera.position.copy(idealOffset);
+    currentPosition.lerp(idealOffset, t);
+    camera.position.copy(currentPosition);
 
-    const idealLookat = new THREE.Vector3(0, 2.5, 0);
+    const idealLookat = new THREE.Vector3(0, 5, 0);
     idealLookat.applyQuaternion(player.quaternion);
     idealLookat.add(player.position);
-    camera.lookAt(idealLookat);
+    currentLookat.lerp(idealLookat, t);
+    camera.lookAt(currentLookat);
 
 }
 
+// SERVER
+// step/simulate the gamestate forward in time (based on input)
+// for now, it updates the player position localled based on player controls
+setInterval(tick, 1000 / 60);
+function tick() {
+    if (controls.translate) {
+        player.translateY(0.03);
+    }
 
+    let rotateSpeed = 0.05;
+
+    switch (controls.rotateState) {
+    case 'w': updateRotation(0, rotateSpeed); break;
+    case 's': updateRotation(0, -rotateSpeed); break;
+    case 'a': updateRotation(rotateSpeed, 0); break;
+    case 'd': updateRotation(-rotateSpeed, 0); break;
+    case 'wd': updateRotation(-rotateSpeed / 2, rotateSpeed / 2); break;
+    case 'wa': updateRotation(rotateSpeed / 2, rotateSpeed / 2); break;
+    case 'sa': updateRotation(rotateSpeed / 2, -rotateSpeed / 2); break;
+    case 'sd': updateRotation(-rotateSpeed / 2, -rotateSpeed / 2); break;
+    }
+}
 
 // SERVER
 // update player's rotation
+// used by repeatedly by tick()
 function updateRotation(xh, yv) {
     phi += xh;
     theta += yv;
@@ -123,27 +153,6 @@ function updateRotation(xh, yv) {
     player.quaternion.copy(q);
 
     player.rotateOnWorldAxis(new THREE.Vector3(0, 1, 0), phi);
-}
-
-
-// SERVER
-// step/simulate the gamestate forward in time (based on input)
-setInterval(tick, 1000 / 20);
-function tick() {
-    if (controls.translate) {
-        player.translateY(0.07);
-    }
-
-    switch (controls.rotateState) {
-    case 'w': updateRotation(0, 0.1); break;
-    case 's': updateRotation(0, -0.1); break;
-    case 'a': updateRotation(0.1, 0); break;
-    case 'd': updateRotation(-0.1, 0); break;
-    case 'wd': updateRotation(-0.05, 0.05); break;
-    case 'wa': updateRotation(0.05, 0.05); break;
-    case 'sa': updateRotation(0.05, -0.05); break;
-    case 'sd': updateRotation(-0.05, -0.05); break;
-    }
 }
 
 // for managing input 
