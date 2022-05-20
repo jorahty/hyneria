@@ -1,6 +1,8 @@
 import * as THREE from 'three';
 import { OutlineEffect } from 'https://unpkg.com/three/examples/jsm/effects/OutlineEffect.js';
 
+let currentAngle = 0;
+
 let renderer;
 const clamp = (num, min, max) => Math.min(Math.max(num, min), max);
 
@@ -295,11 +297,17 @@ function input(code) {
     // compute dial angle
     let index = rotateStates.indexOf(code);
     let dialAngle = index * 45;
+    currentAngle = closestEquivalentAngle(currentAngle, dialAngle)
 
     // rotate dial
-    dial.style.transform = `rotate(${-dialAngle}deg)`;
+    dial.style.transform = `rotate(${-currentAngle}deg)`;
 
     // 3. (maybe use for client-side prediction)
+}
+
+function closestEquivalentAngle(from, to) {
+    var delta = ((((to - from) % 360) + 540) % 360) - 180;
+    return from + delta;
 }
 
 function adaptToWindowSize() {
