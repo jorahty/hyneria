@@ -13,7 +13,7 @@ let gamestate = {};
 // SERVER
 let controls = {
     translate: false,
-    rotateState: 'c'
+    rotateState: ''
 }
 
 // establish connection to server
@@ -135,22 +135,21 @@ function tick() {
     }
 
     switch (controls.rotateState) {
-    case 't': updateRotation(0, 0.1); break;
-    case 'b': updateRotation(0, -0.1); break;
-    case 'l': updateRotation(0.1, 0); break;
-    case 'r': updateRotation(-0.1, 0); break;
-    case 'tr': updateRotation(-0.05, 0.05); break;
-    case 'tl': updateRotation(0.05, 0.05); break;
-    case 'bl': updateRotation(0.05, -0.05); break;
-    case 'br': updateRotation(-0.05, -0.05); break;
+    case 'w': updateRotation(0, 0.1); break;
+    case 's': updateRotation(0, -0.1); break;
+    case 'a': updateRotation(0.1, 0); break;
+    case 'd': updateRotation(-0.1, 0); break;
+    case 'wd': updateRotation(-0.05, 0.05); break;
+    case 'wa': updateRotation(0.05, 0.05); break;
+    case 'sa': updateRotation(0.05, -0.05); break;
+    case 'sd': updateRotation(-0.05, -0.05); break;
     }
 }
 
 // for managing input 
 let translateIds = new Set();
 let rotateId = null;
-let currentRotateState = 'c';
-let rotateStates = ['r', 'tr', 't', 'tl', 'l', 'bl', 'b', 'br', 'c'];
+let rotateStates = ['d', 'wd', 'w', 'wa', 'a', 'sa', 's', 'sd', ''];
 
 // configControls()
 // Adds controls to dom
@@ -169,9 +168,9 @@ function configControls() {
     dial.setAttribute('class','dial');
 
     // listen for input
-    window.onpointerdown = e => {
+    document.onpointerdown = e => {
         // is it a translate pointer?
-        if (translate.contains(e.target)) {
+        if (translate.contains(e.target) && controls.translate == false) {
             input('go');
             translateIds.add(e.pointerId);
             return;
@@ -181,7 +180,7 @@ function configControls() {
         checkAngle(); // check if triggers new rotate state
     }
 
-    window.onpointerup = e => {
+    document.onpointerup = e => {
         // is it a translate pointer?
         if (translate.contains(e.target)) {
             input('stop');
@@ -189,19 +188,52 @@ function configControls() {
         }
         // is it the rotate pointer?
         if (e.pointerId == rotateId) {
-            input('c');
-            currentRotateState = 'c';
+            input('');
             rotateId = null;
         }
     }
 
-    window.onpointermove = e => {
+    document.onpointermove = e => {
         if (e.pointerId != rotateId) return;
         checkAngle(); // check if triggers new rotate state
     }
+
+    document.onkeydown = e => {
+        if (e.key == ' ') {
+            input('go');
+            return;
+        }
+
+        if ('wasd'.includes(e.key) == false) return;
+
+        if (controls.rotateState.includes(e.key)) return;
+
+        if (controls.rotateState.length >= 2) return;
+
+        if (e.key == 'w' || e.key == 's') {
+            controls.rotateState = e.key + controls.rotateState; // prepend
+        } else {
+            controls.rotateState += e.key; // append
+        }
+
+        input(controls.rotateState);
+    }
+
+    document.onkeyup = e => {
+        if (e.key == ' ') {
+            input('stop');
+            return;
+        }
+
+        if (controls.rotateState.includes(e.key) == false) return;
+        controls.rotateState = controls.rotateState.replace(e.key, '');
+        input(controls.rotateState);
+    }
 }
 
-// check if angle calls for rotate dial to be updated
+// checkAngle()
+// checkes if angle calls for input event
+// used when listening for pointer move
 function checkAngle() {
     
     // compute angle
@@ -219,9 +251,8 @@ function checkAngle() {
         let inRange = angle > i * 45 && angle < i * 45 + 45;
 
         // if not already in rs and angle is in rs range
-        if (currentRotateState != rs && inRange) {
+        if (controls.rotateState != rs && inRange) {
             input(rs);
-            currentRotateState = rs;
         }
     }
 }
@@ -232,7 +263,6 @@ function input(code) {
     // 1. send code to server
     if (code == 'go') controls.translate = true;
     if (code == 'stop') controls.translate = false;
-    controls.rotateState = code;
 
     // 2. style controls
 
@@ -241,7 +271,9 @@ function input(code) {
         return;
     }
 
-    if (code == 'c') { // inactive rotate state?
+    controls.rotateState = code;
+
+    if (code == '') { // inactive rotate state?
         dial.style.width = '16%';
         dial.style.background = '#15223c';
         return;
