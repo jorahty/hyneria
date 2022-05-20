@@ -128,7 +128,7 @@ function updateRotation(xh, yv) {
 
 // SERVER
 // step/simulate the gamestate forward in time (based on input)
-setInterval(tick, 1000 / 30);
+setInterval(tick, 1000 / 20);
 function tick() {
     if (controls.translate) {
         player.translateY(0.07);
@@ -300,13 +300,13 @@ function domPosition(el) {
 
 // decorate scene with plankton
 function decorate() {
-    let geometry = new THREE.SphereGeometry(0.013);
-    for (let i = 0; i < 400; i++) {
-        let material = new THREE.MeshBasicMaterial({ color: 0x91d7ff });
-        let mesh = new THREE.Mesh(geometry, material);
-        mesh.position.x = -10 + Math.random() * 20;
-        mesh.position.y = -10 + Math.random() * 20;
-        mesh.position.z = -10 + Math.random() * 20;
-        scene.add(mesh);
+    for (let i = 0; i < 6400; i++) {
+        // let material = new THREE.MeshBasicMaterial( {color: 0x0055ff} );
+        let sprite = new THREE.Sprite();
+        sprite.scale.set( 0.03, 0.03, 0.03 )
+        sprite.position.x = -20 + Math.random() * 40;
+        sprite.position.y = -20 + Math.random() * 40;
+        sprite.position.z = -20 + Math.random() * 40;
+        scene.add(sprite);
     }
 }
