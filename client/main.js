@@ -1,5 +1,4 @@
 import * as THREE from 'three';
-import { OutlineEffect } from 'https://unpkg.com/three/examples/jsm/effects/OutlineEffect.js';
 
 let currentAngle = 0;
 
@@ -76,14 +75,6 @@ configControls();
 adaptToWindowSize();
 window.onresize = adaptToWindowSize;
 
-// init outline effect
-let effect = new OutlineEffect( renderer, {
-    defaultThickness: 0.007,
-    defaultColor: [ 0, 0, 0 ],
-    defaultKeepAlive: true,
-});
-
-
 const currentPosition = new THREE.Vector3();
 const currentLookat = new THREE.Vector3();
 
@@ -94,8 +85,6 @@ function animate() {
 
     update(); // before each render, update the scene based on gamestate
 
-    // renderer.render(scene, camera);
-    // effect.render(scene, camera);
     renderer.render(scene, camera);
 };
 
