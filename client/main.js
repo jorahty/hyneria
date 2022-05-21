@@ -29,7 +29,7 @@ document.body.appendChild(main);
 // create scene
 let scene = new THREE.Scene();
 let textureLoader = new THREE.TextureLoader();
-textureLoader.load('https://cse120.jorahty.repl.co/blue.jpg', texture => {
+textureLoader.load('./assets/blue.jpg', texture => {
     texture.mapping = THREE.EquirectangularReflectionMapping;
     texture.encoding = THREE.sRGBEncoding;
     scene.background = texture;
