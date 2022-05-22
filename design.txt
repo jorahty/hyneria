@@ -1,0 +1,66 @@
+
+# GLOBAL
+obj gamestate: used to update scene for rendering, recieved from server
+dom elements (main, renderer, controls): adjusted on resize, 
+
+==================================================================
+🌎 import three & other needed modules
+
+🌎 connect to server
+  send metadata, like your color, name, photo
+  record your assigned id, so you know which player to follow/focus on
+
+🌎 define defualt gamestate (to be updated by server shortly)
+  define globals: scene, camera, player geometry, dom els
+
+INIT (prepare to render)
+  🫐 add app container 'main'
+    adapt to window
+
+  🫐 load assets (background)
+    
+  🫐 create default scene, background, decoration
+
+  🫐 create camera
+
+  🫐 create renderer and add it to the dom
+
+  🫐 start rendering gamestate!
+
+RENDER
+🌈 continuously render the scene
+  before every render, update scene & camera according to the gamestate
+  (recursivly call self)
+
+🌈 update scene and camera according to gamestate & myId (called b4 each frame)
+
+RECIEVE
+🌲 upon reciving an update from the server, update gamestate
+
+CONTROLS
+🎮 monitor/listen to controls and call input() accordingly
+
+INPUT
+💥 send input to server
+  style controls for visual confirmation
+
+RESIZE
+🪟 adjust dom elements
+
+
+
+========
+
+server broadcasts gamestate
+
+server also records the controlstate of each user,
+but the control state is not broadcasted
+
+server also checks for and detects consumpotion somehow
+tells, everyone which player consumed, which player died, etc
+
+upon new connection,
+sends metadata like sizes, color, name
+
+sends leaderboards occasionally
+

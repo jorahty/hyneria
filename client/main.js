@@ -55,7 +55,7 @@ renderer.outputEncoding = THREE.sRGBEncoding;
 main.appendChild(renderer.domElement);
 
 // define player geometry
-let geometry = new THREE.ConeGeometry(0.3);
+let geometry = new THREE.ConeGeometry(0.3, 1, 4);
 let material = new THREE.MeshMatcapMaterial({ color: 0x0d5c43 });
 let player = new THREE.Mesh(geometry, material);
 player.quaternion.copy(new THREE.Quaternion());
