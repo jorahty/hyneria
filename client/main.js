@@ -15,10 +15,10 @@ import * as THREE from 'https://cdn.jsdelivr.net/npm/three/build/three.module.js
 
     // connect to the server and record myId
     let socket = io();
-    socket.on('connect', () => { myId = socket.id; console.log(myId); })
+    socket.on('connect', () => { myId = socket.id; })
 
     // upon recieving update from server, update gamestate
-    // socket.on('update', gs => { gamestate = gs; });
+    socket.on('update', gs => { gamestate = gs; });
 
     scene = createScene(); // create scene
 
@@ -33,22 +33,7 @@ import * as THREE from 'https://cdn.jsdelivr.net/npm/three/build/three.module.js
     // style dom depending on window aspect ratio
     addEventListener('resize', styleDom);
     styleDom();
-
-    setInterval(Tick, 1000 / 40);
-
   })();
-
-  // Tick()
-  // step/simulate the gamestate forward in time based on controls
-  // this will go on the server!
-  function Tick() {
-    for (let player of Object.values(gamestate)) {
-      player.p[0] += 0.01 * Math.sin(Date.now() * 1e-3);
-      player.p[1] = (-Math.PI + 0.39) * (Math.sin(Date.now()* 1e-3) + 1) / 2;
-      player.r[0] += 0.01;
-      player.r[1] += 0.01;
-    }
-  }
 
   // Animate()
   // continuously render the scene from the camera
