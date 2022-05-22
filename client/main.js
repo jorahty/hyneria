@@ -1,15 +1,19 @@
 import * as THREE from 'three';
 
-let currentAngle = 0;
-
-let renderer;
-const clamp = (num, min, max) => Math.min(Math.max(num, min), max);
-
-// declare global variables
-let dialOrigin = { x: 0, y: 0 };
+// establish connection to server
+  // send metadata (color, name, photo) perminent data that won't change during session
+  // record myId so we know which player to follow
 
 // define gamestate
 let gamestate = {};
+
+let currentAngle = 0;
+let dialOrigin = { x: 0, y: 0 };
+let translateIds = new Set();
+let rotateId = null;
+let rotateStates = ['d', 'wd', 'w', 'wa', 'a', 'sa', 's', 'sd', ''];
+
+let renderer;
 
 // SERVER
 let controls = {
@@ -17,13 +21,19 @@ let controls = {
     rotateState: ''
 }
 
-// establish connection to server
+let main;
 
-// upon recieving update from server, update gamestate
+init();
 
-// create 'main' element
-let main = document.createElement('main');
-document.body.appendChild(main);
+function init() {
+    // add app container dom element 'main'
+    main = document.createElement('main');
+    document.body.appendChild(main);
+    // adaptDomToWindowSize(); // scale 'main' to window
+
+}
+
+
 
 // create scene
 let scene = new THREE.Scene();
@@ -32,8 +42,6 @@ textureLoader.load('./assets/blue.jpg', texture => {
     texture.mapping = THREE.EquirectangularReflectionMapping;
     texture.encoding = THREE.sRGBEncoding;
     scene.background = texture;
-    renderer.domElement.style.display = 'block';
-    adaptToWindowSize();
 });
 
 // decorate scene with plankton
@@ -41,16 +49,14 @@ decorate();
 
 // create camera
 let camera = new THREE.PerspectiveCamera(90);
-camera.position.z = 5;
-camera.position.y = 3;
-camera.rotation.x = -0.4;
+const currentPosition = new THREE.Vector3();
+const currentLookat = new THREE.Vector3();
 
 // create renderer
 renderer = new THREE.WebGLRenderer({ antialias: true });
 renderer.setSize(512, 512);
 renderer.domElement.style.width = '100%';
 renderer.domElement.style.height = 'auto';
-renderer.domElement.style.display = 'none';
 renderer.outputEncoding = THREE.sRGBEncoding;
 main.appendChild(renderer.domElement);
 
@@ -58,7 +64,6 @@ main.appendChild(renderer.domElement);
 let geometry = new THREE.ConeGeometry(0.3, 1, 4);
 let material = new THREE.MeshMatcapMaterial({ color: 0x0d5c43 });
 let player = new THREE.Mesh(geometry, material);
-player.quaternion.copy(new THREE.Quaternion());
 let phi = 0;
 let theta = - Math.PI / 2;
 updateRotation(0, 0);
@@ -74,9 +79,6 @@ configControls();
 // adapt to window size
 adaptToWindowSize();
 window.onresize = adaptToWindowSize;
-
-const currentPosition = new THREE.Vector3();
-const currentLookat = new THREE.Vector3();
 
 // animate
 animate();
@@ -145,11 +147,6 @@ function updateRotation(xh, yv) {
 
     player.rotateOnWorldAxis(new THREE.Vector3(0, 1, 0), phi);
 }
-
-// for managing input 
-let translateIds = new Set();
-let rotateId = null;
-let rotateStates = ['d', 'wd', 'w', 'wa', 'a', 'sa', 's', 'sd', ''];
 
 // configControls()
 // Adds controls to dom
@@ -348,3 +345,5 @@ function decorate() {
         scene.add(sprite);
     }
 }
+
+function clamp(num, min, max) { return Math.min(Math.max(num, min), max); }
