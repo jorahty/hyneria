@@ -14,8 +14,8 @@ import * as THREE from 'https://cdn.jsdelivr.net/npm/three/build/three.module.js
   (function Init() {
 
     // connect to the server and record myId
-    // let socket = io();
-    // socket.on('connect', () => { myId = socket.id; })
+    let socket = io();
+    socket.on('connect', () => { myId = socket.id; console.log(myId); })
 
     // upon recieving update from server, update gamestate
     // socket.on('update', gs => { gamestate = gs; });
