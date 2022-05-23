@@ -56,13 +56,13 @@ setInterval(() => { io.volatile.emit('update', gamestate); }, 1000 / BROADCAST_R
 setInterval(Tick, 1000 / TICK_RATE);
 function Tick() {
   for (let id in gamestate) { // for every user
-    
+
     if (controls[id].rotate.includes('w')) {
-      gamestate[id].r[1] = Math.min(gamestate[id].r[1] + 0.1, Math.PI / 2);
+      gamestate[id].r[1] = Math.min(gamestate[id].r[1] + 0.1, Math.PI / 2 - 0.1);
     }
 
     if (controls[id].rotate.includes('s')) {
-      gamestate[id].r[1] = Math.max(gamestate[id].r[1] - 0.1, -Math.PI / 2 + 0.51);
+      gamestate[id].r[1] = Math.max(gamestate[id].r[1] - 0.1, -Math.PI / 2 + 0.1);
     }
 
     if (controls[id].rotate.includes('a')) {

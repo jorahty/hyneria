@@ -273,7 +273,7 @@ import * as THREE from 'https://cdn.jsdelivr.net/npm/three/build/three.module.js
     let scene = new THREE.Scene();
 
     // define player geometry
-    scene.playerGeometry = new THREE.ConeGeometry(0.3, 1, 4);
+    scene.playerGeometry = new THREE.BoxGeometry(0.2, 0.5, 1.2);
 
     // set background
     let textureLoader = new THREE.TextureLoader();
@@ -330,13 +330,13 @@ import * as THREE from 'https://cdn.jsdelivr.net/npm/three/build/three.module.js
     }
   }
 
-  // focusCamera()
+  // focusCameraOn()
   // position and rotate the camera with respect to player
   function focusCameraOn(player) {
     let t = 0.2;
 
     // position camera
-    let idealOffset = new THREE.Vector3(0, 2.5, 1.8);
+    let idealOffset = new THREE.Vector3(0, 1.5, 3);
     idealOffset.applyQuaternion(player.quaternion);
     idealOffset.add(player.position);
     camera.position.lerp(idealOffset, t);
