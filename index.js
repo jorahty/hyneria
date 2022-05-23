@@ -2,7 +2,6 @@ const http = require('http');
 const express = require('express');
 const path = require('path');
 const socketio = require("socket.io");
-const THREE = require("three");
 
 const app = express();
 const httpserver = http.Server(app);
