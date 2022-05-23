@@ -28,8 +28,11 @@ io.on('connection', socket => {
   io.to(socket.id).emit('id', playerId);
 
   // add user to gamestate
+  let x = Math.round((-3 + Math.random() * 6) * 100) / 100;
+  let y = Math.round((-3 + Math.random() * 6) * 100) / 100;
+  let z = Math.round((-3 + Math.random() * 6) * 100) / 100;
   gamestate[playerId] = {
-    p: [-3 + Math.random() * 6, -3 + Math.random() * 6, -3 + Math.random() * 6],
+    p: [x, y, z],
     r: [0, 0]
   };
 
