@@ -28,7 +28,7 @@ import * as THREE from 'https://cdn.jsdelivr.net/npm/three/build/three.module.js
     
     Animate(); // start rendering gamestate
 
-    // Controls(); // create & configure controls
+    Controls(); // create & configure controls
 
     // style dom depending on window aspect ratio
     addEventListener('resize', styleDom);
@@ -86,19 +86,56 @@ import * as THREE from 'https://cdn.jsdelivr.net/npm/three/build/three.module.js
   // Controls()
   // create and configure controls to listen for user input and call Input() accordingly
   function Controls() {
+
+    // for managing input
+    let currentAngle = 0;
+    let dialOrigin = { x: 0, y: 0 };
+    let translateIds = new Set();
+    let rotateId = null;
+    let rotateStates = ['d', 'wd', 'w', 'wa', 'a', 'sa', 's', 'sd', ''];
+
+    // create control dom elements
+    let controlsContainer = document.createElement('section');
+    let translate = document.createElement('button');
+    let dialContainer = document.createElement('div');
+    let dial = document.createElement('div');
+
+    // append controls to dom
+    document.querySelector('main').appendChild(controlsContainer);
+    controlsContainer.appendChild(translate);
+    controlsContainer.appendChild(dialContainer);
+    dialContainer.appendChild(dial);
+
+    // set classes for styling
+    controlsContainer.setAttribute('class','controls-container');
+    dialContainer.setAttribute('class','dial-container');
+    dial.setAttribute('class','dial');
     
-    Input('input code');
 
-    // Input()
-    // send input to server
-    // style controls for visual confirmation of input
-    function Input(code) {
+    // Input('input code');
 
-    }
+    // // Input()
+    // // send input to server
+    // // style controls for visual confirmation of input
+    // function Input(code) {
+
+    // }
     
     addEventListener('resize', () => {
-      // adjust controls
+      // get dial origin
+      // (so that we can compare it to pointer position)
+      let dialContainer = document.querySelector('.dial-container');
+      dialOrigin = domPosition(dialContainer)
     });
+
+    // returns {x, y} coordinates of dom element el
+    function domPosition(el) {
+      var rect = el.getBoundingClientRect();
+      return {
+        x: (rect.right + rect.left) / 2,
+        y: (rect.bottom + rect.top) / 2
+      }
+    }
   }
 
   // ██ helper functions ██
@@ -188,6 +225,7 @@ import * as THREE from 'https://cdn.jsdelivr.net/npm/three/build/three.module.js
   function styleDom() {
     let main = document.querySelector('main');
     let canvas = document.querySelector('canvas');
+    let controlsContainer = document.querySelector('.controls-container');
     let topMargin = 0.013 * window.innerHeight;
 
     let appAspectRatio = 0.6;
@@ -201,7 +239,7 @@ import * as THREE from 'https://cdn.jsdelivr.net/npm/three/build/three.module.js
       main.style.marginTop = (topMargin).toString() + 'px';
       canvas.style.borderWidth = '2px';
       canvas.style.borderRadius = '2vh';
-      // controlsContainer.style.padding = '1.3vh 0';
+      controlsContainer.style.padding = '1.3vh 0';
 
     } else {
 
@@ -211,7 +249,7 @@ import * as THREE from 'https://cdn.jsdelivr.net/npm/three/build/three.module.js
       main.style.marginTop = '0';
       canvas.style.borderWidth = '2px 0 2px 0';
       canvas.style.borderRadius = '0';
-      // controlsContainer.style.padding = '1.3vh';
+      controlsContainer.style.padding = '1.3vh';
 
     }
   }
