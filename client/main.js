@@ -336,13 +336,13 @@ import * as THREE from 'https://cdn.jsdelivr.net/npm/three/build/three.module.js
     let t = 0.2;
 
     // position camera
-    let idealOffset = new THREE.Vector3(0, -2.5, 1.8);
+    let idealOffset = new THREE.Vector3(0, 2.5, 1.8);
     idealOffset.applyQuaternion(player.quaternion);
     idealOffset.add(player.position);
     camera.position.lerp(idealOffset, t);
 
     // point camera
-    let idealLookat = new THREE.Vector3(0, 5, 0);
+    let idealLookat = new THREE.Vector3(0, 1.5, 0);
     idealLookat.applyQuaternion(player.quaternion);
     idealLookat.add(player.position);
     camera.currentLookat.lerp(idealLookat, t);

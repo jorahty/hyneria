@@ -18,14 +18,13 @@ const TICK_RATE = 30;
 // globals
 let gamestate = {};
 let controls = {};
-let scene = new THREE.Scene(); // to make use of translateX
 
 io.on('connection', socket => {
 
   // add user to gamestate
   gamestate[socket.id] = {
     p: [-3 + Math.random() * 6, -3 + Math.random() * 6, -3 + Math.random() * 6],
-    r: [0, -Math.PI / 2]
+    r: [0, 0]
   };
 
   // track user controls
@@ -57,16 +56,17 @@ setInterval(() => { io.volatile.emit('update', gamestate); }, 1000 / BROADCAST_R
 setInterval(Tick, 1000 / TICK_RATE);
 function Tick() {
   for (let id in gamestate) { // for every user
-    // if (controls[id].isRotating) gamestate[id].rotation += ROTATE_SPEED;
-    // if (controls[id].isTranslating) {
-    //     gamestate[id].x -= TRANSLATE_SPEED * Math.sin(gamestate[id].rotation);
-    //     gamestate[id].y += TRANSLATE_SPEED * Math.cos(gamestate[id].rotation);
-    // }
-    // gamestate[id].r[0] += 0.01;
+    
+    if (controls[id].rotate.includes('w')) {
+      gamestate[id].r[1] = Math.min(gamestate[id].r[1] + 0.1, Math.PI / 2);
+    }
+
+    if (controls[id].rotate.includes('s')) {
+      gamestate[id].r[1] = Math.max(gamestate[id].r[1] - 0.1, -Math.PI / 2 + 0.51);
+    }
 
     if (controls[id].rotate.includes('a')) {
       gamestate[id].r[0] += 0.1;
-      return;
     }
 
     if (controls[id].rotate.includes('d')) {
