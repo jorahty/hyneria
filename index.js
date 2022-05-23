@@ -57,6 +57,10 @@ setInterval(Tick, 1000 / TICK_RATE);
 function Tick() {
   for (let id in gamestate) { // for every user
 
+    if (controls[id].translate) {
+      gamestate[id].p[0] += 0.1;
+    }
+
     if (controls[id].rotate.includes('w')) {
       gamestate[id].r[1] = Math.min(gamestate[id].r[1] + 0.1, Math.PI / 2 - 0.1);
     }
@@ -72,7 +76,5 @@ function Tick() {
     if (controls[id].rotate.includes('d')) {
       gamestate[id].r[0] -= 0.1;
     }
-
-
   }
 }

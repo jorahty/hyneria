@@ -62,11 +62,12 @@ import * as THREE from 'https://cdn.jsdelivr.net/npm/three/build/three.module.js
         scene.add(mesh);
       }
 
-      // update player position
+      let t = 0.2;
       let player = gamestate[id];
-      mesh.position.x = player.p[0];
-      mesh.position.y = player.p[1];
-      mesh.position.z = player.p[2];
+
+      // update player position
+      let newpos = new THREE.Vector3(player.p[0], player.p[1], player.p[2]);
+      mesh.position.lerp(newpos, t);
 
       // update player rotation
       let q = new THREE.Quaternion();
@@ -74,7 +75,7 @@ import * as THREE from 'https://cdn.jsdelivr.net/npm/three/build/three.module.js
       let obj = new THREE.Object3D();
       obj.quaternion.copy(q);
       obj.rotateOnWorldAxis(new THREE.Vector3(0, 1, 0), player.r[0]);
-      mesh.quaternion.copy(obj.quaternion);
+      mesh.quaternion.slerp(obj.quaternion, t);
 
       // focus camera if player has myId
       if (id === myId) focusCameraOn(mesh);
