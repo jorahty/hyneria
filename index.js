@@ -14,23 +14,28 @@ httpserver.listen(port);
 
 const BROADCAST_RATE = 30;
 const TICK_RATE = 30;
-const TRANSLATE_SPEED = 0.1;
-const ROTATE_SPEED = 0.1;
+const TRANSLATE_SPEED = 0.12;
+const ROTATE_SPEED = 0.07;
 
 // globals
 let gamestate = {};
 let controls = {};
+let playerCount = 0;
 
 io.on('connection', socket => {
 
+  const playerId = ++playerCount;
+
+  io.to(socket.id).emit('id', playerId);
+
   // add user to gamestate
-  gamestate[socket.id] = {
+  gamestate[playerId] = {
     p: [-3 + Math.random() * 6, -3 + Math.random() * 6, -3 + Math.random() * 6],
     r: [0, 0]
   };
 
   // track user controls
-  controls[socket.id] = {
+  controls[playerId] = {
     translate: false,
     rotate: ''
   }
@@ -38,16 +43,16 @@ io.on('connection', socket => {
   // listen for user input
   socket.on('input', code => {
     switch (code) {
-    case 'go': controls[socket.id].translate = true; break;
-    case 'stop': controls[socket.id].translate = false; break;
-    default: controls[socket.id].rotate = code; break;
+    case 'go': controls[playerId].translate = true; break;
+    case 'stop': controls[playerId].translate = false; break;
+    default: controls[playerId].rotate = code; break;
     }
   });
 
   // listen for disconnection
   socket.on('disconnect', () => {
-    delete gamestate[socket.id];
-    delete controls[socket.id];
+    delete gamestate[playerId];
+    delete controls[playerId];
   });
 });
 
@@ -76,6 +81,12 @@ function Tick() {
       gamestate[id].r[0] -= ROTATE_SPEED;
     }
 
+    if (controls[id].rotate != '') {
+      // round to nearest tenth
+      gamestate[id].r[0] = Math.round(gamestate[id].r[0] * 100) / 100;
+      gamestate[id].r[1] = Math.round(gamestate[id].r[1] * 100) / 100;
+    }
+
     // translate
     if (controls[id].translate) {
       let phi = gamestate[id].r[0];
@@ -83,6 +94,11 @@ function Tick() {
       gamestate[id].p[0] -= TRANSLATE_SPEED * Math.sin(phi) * Math.sin(theta);
       gamestate[id].p[1] -= TRANSLATE_SPEED * Math.cos(theta);
       gamestate[id].p[2] -= TRANSLATE_SPEED * Math.cos(phi) * Math.sin(theta);
+
+      // round to nearest tenth
+      gamestate[id].p[0] = Math.round(gamestate[id].p[0] * 100) / 100;
+      gamestate[id].p[1] = Math.round(gamestate[id].p[1] * 100) / 100;
+      gamestate[id].p[2] = Math.round(gamestate[id].p[2] * 100) / 100;
     }
   }
 }

@@ -16,7 +16,7 @@ import * as THREE from 'https://cdn.jsdelivr.net/npm/three/build/three.module.js
 
     // connect to the server and record myId
     socket = io();
-    socket.on('connect', () => { myId = socket.id; })
+    socket.on('id', id => { myId = id; });
 
     // upon recieving update from server, update gamestate
     socket.on('update', gs => { gamestate = gs; });
@@ -78,7 +78,7 @@ import * as THREE from 'https://cdn.jsdelivr.net/npm/three/build/three.module.js
       mesh.quaternion.slerp(obj.quaternion, t);
 
       // focus camera if player has myId
-      if (id === myId) focusCameraOn(mesh);
+      if (id == myId) focusCameraOn(mesh);
     }
 
     // remove absent players
@@ -285,9 +285,9 @@ import * as THREE from 'https://cdn.jsdelivr.net/npm/three/build/three.module.js
     });
 
     // decorate with particles
-    for (let i = 0; i < 6400; i++) {
+    for (let i = 0; i < 800; i++) {
       let sprite = new THREE.Sprite();
-      sprite.scale.set(0.03, 0.03, 0.03)
+      sprite.scale.set(0.04, 0.04, 0.04)
       sprite.position.x = -20 + Math.random() * 40;
       sprite.position.y = -20 + Math.random() * 40;
       sprite.position.z = -20 + Math.random() * 40;
