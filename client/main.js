@@ -93,6 +93,7 @@ import * as THREE from 'https://cdn.jsdelivr.net/npm/three/build/three.module.js
     let translateIds = new Set();
     let rotateId = null;
     let rotateStates = ['d', 'wd', 'w', 'wa', 'a', 'sa', 's', 'sd', ''];
+    let controls = { translate: false, rotateState: '' }
 
     // create control dom elements
     let controlsContainer = document.createElement('section');
@@ -111,22 +112,144 @@ import * as THREE from 'https://cdn.jsdelivr.net/npm/three/build/three.module.js
     dialContainer.setAttribute('class','dial-container');
     dial.setAttribute('class','dial');
     
+    document.onpointerdown = e => {
+      // is it a translate pointer?
+      if (translate.contains(e.target) && controls.translate == false) {
+        Input('go');
+        translateIds.add(e.pointerId);
+        return;
+      }
+      // it's a rotate pointer
+      rotateId = e.pointerId; // set it to THE rotate pointer
+      checkAngle(); // check if triggers new rotate state
+    }
 
-    // Input('input code');
+    document.onpointerup = e => {
+      // is it a translate pointer?
+      if (translate.contains(e.target)) {
+        Input('stop');
+        translateIds.delete(e.pointerId);
+      }
+      // is it the rotate pointer?
+      if (e.pointerId == rotateId) {
+        Input('');
+        rotateId = null;
+      }
+    }
 
-    // // Input()
-    // // send input to server
-    // // style controls for visual confirmation of input
-    // function Input(code) {
+    document.onpointermove = e => {
+      if (e.pointerId != rotateId) return;
+      checkAngle(); // check if triggers new rotate state
+    }
 
-    // }
+    document.onkeydown = e => {
+      if (e.key == ' ' && controls.translate === false) {
+        Input('go');
+        return;
+      }
+
+      if ('wasd'.includes(e.key) == false) return;
+
+      if (controls.rotateState.includes(e.key)) return;
+
+      if (controls.rotateState.length >= 2) return;
+
+      if (e.key == 'w' || e.key == 's') {
+        controls.rotateState = e.key + controls.rotateState; // prepend
+      } else {
+        controls.rotateState += e.key; // append
+      }
+
+      Input(controls.rotateState);
+    }
+
+    document.onkeyup = e => {
+      if (e.key == ' ') {
+        Input('stop');
+        return;
+      }
+
+      if (controls.rotateState.includes(e.key) == false) return;
+      controls.rotateState = controls.rotateState.replace(e.key, '');
+      Input(controls.rotateState);
+    }
+
+    // checkAngle()
+    // checkes if angle calls for input event
+    // used when listening for pointer move
+    function checkAngle() {
+        
+      // compute angle
+      // (direction of pointer relative to dial)
+      let x = window.event.clientX - dialOrigin.x;
+      let y = dialOrigin.y - window.event.clientY;
+      let angle = Math.floor(Math.atan(y / x) / Math.PI * 180);
+      if (x < 0) angle += 180;
+      if (y < 0 && x > 0) angle += 360;
+
+      // check if angle is in each rs range
+      angle = (angle + 22.5) % 360;
+      for (let i = 0; i < 8; i++) {
+        let rs = rotateStates[i];
+        let inRange = angle > i * 45 && angle < i * 45 + 45;
+
+        // if not already in rs and angle is in rs range
+        if (controls.rotateState != rs && inRange) {
+            Input(rs);
+        }
+      }
+    }
+
+    // Input()
+    // send input to server
+    // style controls for visual confirmation of input
+    function Input(code) {
+
+      // 1. send code to server
+      console.log(code);
+
+      if (code == 'go') controls.translate = true;
+      if (code == 'stop') controls.translate = false;
+
+      // 2. style controls
+
+      if (code == 'go' || code == 'stop') { // translate input?
+        translate.style.background = (code == 'go') ? '#17346d' : '#15223c';
+        return;
+      }
+
+      controls.rotateState = code;
+
+      if (code == '') { // inactive rotate state?
+        dial.style.width = '16%';
+        dial.style.background = '#15223c';
+        return;
+      }
+
+      // active rotate state
+      dial.style.width = '95%';
+      dial.style.background = 'linear-gradient(to right, #15223c, #17346d)';
+
+      // compute dial angle
+      let index = rotateStates.indexOf(code);
+      let dialAngle = index * 45;
+      currentAngle = closestEquivalentAngle(currentAngle, dialAngle)
+
+      // rotate dial
+      dial.style.transform = `rotate(${-currentAngle}deg)`;
+
+      // 3. (maybe use for client-side prediction)
+    }
     
-    addEventListener('resize', () => {
+    addEventListener('resize', getDialOrigin);
+    addEventListener('pointerdown', getDialOrigin, {once : true});
+    function getDialOrigin() {
       // get dial origin
       // (so that we can compare it to pointer position)
       let dialContainer = document.querySelector('.dial-container');
       dialOrigin = domPosition(dialContainer)
-    });
+    }
+
 
     // returns {x, y} coordinates of dom element el
     function domPosition(el) {
@@ -135,6 +258,11 @@ import * as THREE from 'https://cdn.jsdelivr.net/npm/three/build/three.module.js
         x: (rect.right + rect.left) / 2,
         y: (rect.bottom + rect.top) / 2
       }
+    }
+
+    function closestEquivalentAngle(from, to) {
+      var delta = ((((to - from) % 360) + 540) % 360) - 180;
+      return from + delta;
     }
   }
 
