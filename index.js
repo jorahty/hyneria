@@ -76,11 +76,11 @@ function Tick() {
     }
 
     if (controls[id].rotate.includes('a')) {
-      gamestate[id].r[0] += ROTATE_SPEED;
+      gamestate[id].r[0] = (gamestate[id].r[0] + ROTATE_SPEED) % (Math.PI * 2);
     }
 
     if (controls[id].rotate.includes('d')) {
-      gamestate[id].r[0] -= ROTATE_SPEED;
+      gamestate[id].r[0] = (gamestate[id].r[0] - ROTATE_SPEED) % (Math.PI * 2);
     }
 
     if (controls[id].rotate != '') {
