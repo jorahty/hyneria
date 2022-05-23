@@ -306,7 +306,7 @@ import * as THREE from 'https://cdn.jsdelivr.net/npm/three/build/three.module.js
 
   function createRenderer() {
     renderer = new THREE.WebGLRenderer({ antialias: true });
-    renderer.setSize(512, 512);
+    renderer.setSize(480, 480);
     renderer.domElement.style.width = '100%';
     renderer.domElement.style.height = 'auto';
     renderer.outputEncoding = THREE.sRGBEncoding;
