@@ -10,11 +10,12 @@ import * as THREE from 'https://cdn.jsdelivr.net/npm/three/build/three.module.js
   let gamestate = {};
   let scene, camera, renderer;
   let myId;
+  let socket;
 
   (function Init() {
 
     // connect to the server and record myId
-    let socket = io();
+    socket = io();
     socket.on('connect', () => { myId = socket.id; })
 
     // upon recieving update from server, update gamestate
@@ -206,7 +207,7 @@ import * as THREE from 'https://cdn.jsdelivr.net/npm/three/build/three.module.js
     function Input(code) {
 
       // 1. send code to server
-      console.log(code);
+      socket.volatile.emit('input', code);
 
       if (code == 'go') controls.translate = true;
       if (code == 'stop') controls.translate = false;

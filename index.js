@@ -12,7 +12,7 @@ app.use(express.static(clientDirectory));
 const port = process.env.PORT || 3000;
 httpserver.listen(port);
 
-const BROADCAST_RATE = 2;
+const BROADCAST_RATE = 30;
 const TICK_RATE = 30;
 
 // globals
@@ -36,8 +36,6 @@ io.on('connection', socket => {
 
   // listen for user input
   socket.on('input', code => {
-    console.log('recieved', code);
-
     switch (code) {
     case 'go': controls[socket.id].translate = true; break;
     case 'stop': controls[socket.id].translate = false; break;
@@ -65,5 +63,16 @@ function Tick() {
     //     gamestate[id].y += TRANSLATE_SPEED * Math.cos(gamestate[id].rotation);
     // }
     // gamestate[id].r[0] += 0.01;
+
+    if (controls[id].rotate.includes('a')) {
+      gamestate[id].r[0] += 0.1;
+      return;
+    }
+
+    if (controls[id].rotate.includes('d')) {
+      gamestate[id].r[0] -= 0.1;
+    }
+
+
   }
 }
