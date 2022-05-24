@@ -9,8 +9,14 @@ import * as THREE from 'https://cdn.jsdelivr.net/npm/three/build/three.module.js
   // declare global variables
   let gamestate = {};
   let scene, camera, renderer;
-  let myId;
   let socket;
+  let myId;
+  let controls = { translate: false, rotate: '' } // local controls
+
+  // for local client-side prediciton with Tick()
+  const TICK_RATE = 28; // slightly slower than server
+  const TRANSLATE_SPEED = 0.12; // same as server
+  const ROTATE_SPEED = 0.07;    // same as server
 
   (function Init() {
 
@@ -30,6 +36,8 @@ import * as THREE from 'https://cdn.jsdelivr.net/npm/three/build/three.module.js
     Animate(); // start rendering gamestate
 
     Controls(); // create & configure controls
+
+    setInterval(Tick, 1000 / TICK_RATE); // tick for client-side prediction
 
     // style dom depending on window aspect ratio
     addEventListener('resize', styleDom);
@@ -95,7 +103,6 @@ import * as THREE from 'https://cdn.jsdelivr.net/npm/three/build/three.module.js
     let translateIds = new Set();
     let rotateId = null;
     let rotateStates = ['d', 'wd', 'w', 'wa', 'a', 'sa', 's', 'sd', ''];
-    let controls = { translate: false, rotateState: '' }
 
     // create control dom elements
     let controlsContainer = document.createElement('section');
@@ -152,17 +159,17 @@ import * as THREE from 'https://cdn.jsdelivr.net/npm/three/build/three.module.js
 
       if ('wasd'.includes(e.key) == false) return;
 
-      if (controls.rotateState.includes(e.key)) return;
+      if (controls.rotate.includes(e.key)) return;
 
-      if (controls.rotateState.length >= 2) return;
+      if (controls.rotate.length >= 2) return;
 
       if (e.key == 'w' || e.key == 's') {
-        controls.rotateState = e.key + controls.rotateState; // prepend
+        controls.rotate = e.key + controls.rotate; // prepend
       } else {
-        controls.rotateState += e.key; // append
+        controls.rotate += e.key; // append
       }
 
-      Input(controls.rotateState);
+      Input(controls.rotate);
     }
 
     document.onkeyup = e => {
@@ -171,9 +178,9 @@ import * as THREE from 'https://cdn.jsdelivr.net/npm/three/build/three.module.js
         return;
       }
 
-      if (controls.rotateState.includes(e.key) == false) return;
-      controls.rotateState = controls.rotateState.replace(e.key, '');
-      Input(controls.rotateState);
+      if (controls.rotate.includes(e.key) == false) return;
+      controls.rotate = controls.rotate.replace(e.key, '');
+      Input(controls.rotate);
     }
 
     // checkAngle()
@@ -196,7 +203,7 @@ import * as THREE from 'https://cdn.jsdelivr.net/npm/three/build/three.module.js
         let inRange = angle > i * 45 && angle < i * 45 + 45;
 
         // if not already in rs and angle is in rs range
-        if (controls.rotateState != rs && inRange) {
+        if (controls.rotate != rs && inRange) {
             Input(rs);
         }
       }
@@ -220,7 +227,7 @@ import * as THREE from 'https://cdn.jsdelivr.net/npm/three/build/three.module.js
         return;
       }
 
-      controls.rotateState = code;
+      controls.rotate = code;
 
       if (code == '') { // inactive rotate state?
         dial.style.width = '16%';
@@ -265,6 +272,42 @@ import * as THREE from 'https://cdn.jsdelivr.net/npm/three/build/three.module.js
     function closestEquivalentAngle(from, to) {
       var delta = ((((to - from) % 360) + 540) % 360) - 180;
       return from + delta;
+    }
+  }
+
+  // Tick()
+  // adjust local copy of gamestate based on local controls.
+  // gamestate will soon be overwritten by server.
+  // this enables client-side prediction in-between updates
+  // to gamestate from server.
+  function Tick() {
+    // rotate/translate the player with myId
+    let me = gamestate[myId];
+
+    // rotate
+    if (controls.rotate.includes('w')) {
+      me.r[1] = Math.min(me.r[1] + ROTATE_SPEED, Math.PI / 2 - 0.1);
+    }
+
+    if (controls.rotate.includes('s')) {
+      me.r[1] = Math.max(me.r[1] - ROTATE_SPEED, -Math.PI / 2 + 0.1);
+    }
+
+    if (controls.rotate.includes('a')) {
+      me.r[0] += ROTATE_SPEED;
+    }
+
+    if (controls.rotate.includes('d')) {
+      me.r[0] -= ROTATE_SPEED;
+    }
+
+    // translate
+    if (controls.translate) {
+      let phi = me.r[0];
+      let theta = me.r[1] + Math.PI / 2;
+      me.p[0] -= TRANSLATE_SPEED * Math.sin(phi) * Math.sin(theta);
+      me.p[1] -= TRANSLATE_SPEED * Math.cos(theta);
+      me.p[2] -= TRANSLATE_SPEED * Math.cos(phi) * Math.sin(theta);
     }
   }
 
