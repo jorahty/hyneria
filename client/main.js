@@ -116,7 +116,7 @@ import * as THREE from 'https://cdn.jsdelivr.net/npm/three/build/three.module.js
     controlsContainer.appendChild(dialContainer);
     dialContainer.appendChild(dial);
 
-    // set classes for styling
+    // set css classes for styling
     controlsContainer.setAttribute('class','controls-container');
     dialContainer.setAttribute('class','dial-container');
     dial.setAttribute('class','dial');
@@ -317,7 +317,7 @@ import * as THREE from 'https://cdn.jsdelivr.net/npm/three/build/three.module.js
     let scene = new THREE.Scene();
 
     // define player geometry
-    scene.playerGeometry = new THREE.BoxGeometry(0.2, 0.5, 1.2);
+    scene.playerGeometry = new THREE.BoxGeometry(0.4, 0.5, 1.3);
 
     // set background
     let textureLoader = new THREE.TextureLoader();
@@ -341,7 +341,7 @@ import * as THREE from 'https://cdn.jsdelivr.net/npm/three/build/three.module.js
   }
 
   function createCamera() {
-    let camera = new THREE.PerspectiveCamera(90);
+    let camera = new THREE.PerspectiveCamera(104);
     camera.currentPosition = new THREE.Vector3();
     camera.currentLookat = new THREE.Vector3();
     return camera;
@@ -380,13 +380,13 @@ import * as THREE from 'https://cdn.jsdelivr.net/npm/three/build/three.module.js
     let t = 0.2;
 
     // position camera
-    let idealOffset = new THREE.Vector3(0, 1.5, 3);
+    let idealOffset = new THREE.Vector3(0, 1.4, 2.5);
     idealOffset.applyQuaternion(player.quaternion);
     idealOffset.add(player.position);
     camera.position.lerp(idealOffset, t);
 
     // point camera
-    let idealLookat = new THREE.Vector3(0, 1.5, 0);
+    let idealLookat = new THREE.Vector3(0, 1.4, 0);
     idealLookat.applyQuaternion(player.quaternion);
     idealLookat.add(player.position);
     camera.currentLookat.lerp(idealLookat, t);
