@@ -42,6 +42,19 @@ import * as THREE from 'https://cdn.jsdelivr.net/npm/three/build/three.module.js
     // style dom depending on window aspect ratio
     addEventListener('resize', styleDom);
     styleDom();
+
+    // add plankton to scene
+    socket.on('plankton', plankton => {
+      for (let p of plankton) {
+        let map = new THREE.TextureLoader().load('./img/plankton.png');
+        let material = new THREE.SpriteMaterial({ map: map });
+        let sprite = new THREE.Sprite(material);
+        sprite.scale.set(0.5, 0.5, 0.5);
+        sprite.position.set(p.x, p.y, p.z);
+        sprite.name = JSON.stringify(p);
+        scene.add(sprite);
+      }
+    });
   })();
 
   // Animate()
@@ -331,9 +344,9 @@ import * as THREE from 'https://cdn.jsdelivr.net/npm/three/build/three.module.js
     for (let i = 0; i < 800; i++) {
       let sprite = new THREE.Sprite();
       sprite.scale.set(0.04, 0.04, 0.04)
-      sprite.position.x = -20 + Math.random() * 40;
-      sprite.position.y = -20 + Math.random() * 40;
-      sprite.position.z = -20 + Math.random() * 40;
+      sprite.position.x = -40 + Math.random() * 80;
+      sprite.position.y = -40 + Math.random() * 80;
+      sprite.position.z = -40 + Math.random() * 80;
       scene.add(sprite);
     }
 

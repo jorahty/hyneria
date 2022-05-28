@@ -2,6 +2,7 @@ const http = require('http');
 const express = require('express');
 const path = require('path');
 const socketio = require("socket.io");
+const { Point, Cube, OcTree } = require('./octree.js');
 
 const app = express();
 const httpserver = http.Server(app);
@@ -21,18 +22,25 @@ let gamestate = {};
 let controls = {};
 let playerCount = 0;
 
+// plankton
+let bin = new Cube(0, 0, 0, 40);
+let plankton = new OcTree(bin, 4);
+for (let i = 0; i < 150; i++) {
+  let p = new Point(random(-40, 40), random(-40, 40), random(-40, 40));
+  plankton.insert(p);
+}
+
 io.on('connection', socket => {
 
   const playerId = ++playerCount;
 
   io.to(socket.id).emit('id', playerId);
 
+  io.emit('plankton', plankton.query(bin));
+
   // add user to gamestate
-  let x = Math.round((-3 + Math.random() * 6) * 100) / 100;
-  let y = Math.round((-3 + Math.random() * 6) * 100) / 100;
-  let z = Math.round((-3 + Math.random() * 6) * 100) / 100;
   gamestate[playerId] = {
-    p: [x, y, z],
+    p: [random(-3, 3), random(-3, 3), random(-3, 3)],
     r: [0, 0]
   };
 
@@ -85,8 +93,8 @@ function Tick() {
 
     if (controls[id].rotate != '') {
       // round to nearest tenth
-      gamestate[id].r[0] = Math.round(gamestate[id].r[0] * 100) / 100;
-      gamestate[id].r[1] = Math.round(gamestate[id].r[1] * 100) / 100;
+      gamestate[id].r[0] = round(gamestate[id].r[0]);
+      gamestate[id].r[1] = round(gamestate[id].r[1]);
     }
 
     // translate
@@ -98,9 +106,19 @@ function Tick() {
       gamestate[id].p[2] -= TRANSLATE_SPEED * Math.cos(phi) * Math.sin(theta);
 
       // round to nearest tenth
-      gamestate[id].p[0] = Math.round(gamestate[id].p[0] * 100) / 100;
-      gamestate[id].p[1] = Math.round(gamestate[id].p[1] * 100) / 100;
-      gamestate[id].p[2] = Math.round(gamestate[id].p[2] * 100) / 100;
+      gamestate[id].p[0] = round(gamestate[id].p[0]);
+      gamestate[id].p[1] = round(gamestate[id].p[1]);
+      gamestate[id].p[2] = round(gamestate[id].p[2]);
     }
   }
+}
+
+function random(a, b) {
+  let x = a + Math.random() * (b - a);
+  return round(x);
+
+}
+
+function round(x) {
+  return Math.round(x * 100) / 100;
 }
