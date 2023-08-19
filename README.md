@@ -11,7 +11,7 @@
 # Features
 
 - Controls for both desktop and mobile devices
-- Uses an Octree for 3D collison detection with time complexity $O(\log{}n)$
+- Uses an [Octree](https://en.wikipedia.org/wiki/Octree) for 3D collison detection with time complexity $O(\log{}n)$
 - Synchronized multiplayer world with client-side prediction
 
 ## Usage
